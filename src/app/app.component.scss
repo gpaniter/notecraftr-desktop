@@ -1,0 +1,24 @@
+.main-container {
+    display: grid;
+    height: 100%;
+    width: 100%;
+    grid-template-rows: auto 1fr;
+    position: relative;
+}
+
+nc-menubar{
+    position: sticky;
+    top: 0px;
+    z-index: 2;
+}
+
+.page-container {
+    display: grid;
+    overflow-y:auto;
+    // height: 100%;
+    // width: 100%;
+}
+.router-container {
+    // display: grid;
+    // width: 100%;
+}

@@ -7,12 +7,22 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss"
+          "style": "scss",
+          "skipTests": true
+        },
+        "@schematics/angular:directive": {
+          "skipTests": true
+        },
+        "@schematics/angular:service": {
+          "skipTests": true
+        },
+        "@schematics/angular:pipe": {
+          "skipTests": true
         }
       },
       "root": "",
       "sourceRoot": "src",
-      "prefix": "app",
+      "prefix": "nc",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:application",
@@ -21,7 +31,6 @@
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
-              "zone.js"
             ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
@@ -32,7 +41,108 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/primeng/resources/primeng.min.css",
+              {
+                "input": "src/app/themes/aura-dark-amber/theme.css",
+                "bundleName": "dark-amber",
+                "inject": false
+              },
+              {
+                "input": "src/app/themes/aura-dark-blue/theme.css",
+                "bundleName": "dark-blue",
+                "inject": false
+              },
+              {
+                "input": "src/app/themes/aura-dark-cyan/theme.css",
+                "bundleName": "dark-cyan",
+                "inject": false
+              },
+              {
+                "input": "src/app/themes/aura-dark-green/theme.css",
+                "bundleName": "dark-green",
+                "inject": false
+              },
+              {
+                "input": "src/app/themes/aura-dark-indigo/theme.css",
+                "bundleName": "dark-indigo",
+                "inject": false
+              },
+              {
+                "input": "src/app/themes/aura-dark-lime/theme.css",
+                "bundleName": "dark-lime",
+                "inject": false
+              },
+              {
+                "input": "src/app/themes/aura-dark-noir/theme.css",
+                "bundleName": "dark-noir",
+                "inject": false
+              },
+              {
+                "input": "src/app/themes/aura-dark-pink/theme.css",
+                "bundleName": "dark-pink",
+                "inject": false
+              },
+              {
+                "input": "src/app/themes/aura-dark-purple/theme.css",
+                "bundleName": "dark-purple",
+                "inject": false
+              },
+              {
+                "input": "src/app/themes/aura-dark-teal/theme.css",
+                "bundleName": "dark-teal",
+                "inject": false
+              },
+              {
+                "input": "src/app/themes/aura-light-amber/theme.css",
+                "bundleName": "light-amber",
+                "inject": false
+              },
+              {
+                "input": "src/app/themes/aura-light-blue/theme.css",
+                "bundleName": "light-blue",
+                "inject": false
+              },
+              {
+                "input": "src/app/themes/aura-light-cyan/theme.css",
+                "bundleName": "light-cyan",
+                "inject": false
+              },
+              {
+                "input": "src/app/themes/aura-light-green/theme.css",
+                "bundleName": "light-green",
+                "inject": false
+              },
+              {
+                "input": "src/app/themes/aura-light-indigo/theme.css",
+                "bundleName": "light-indigo",
+                "inject": false
+              },
+              {
+                "input": "src/app/themes/aura-light-lime/theme.css",
+                "bundleName": "light-lime",
+                "inject": false
+              },
+              {
+                "input": "src/app/themes/aura-light-noir/theme.css",
+                "bundleName": "light-noir",
+                "inject": false
+              },
+              {
+                "input": "src/app/themes/aura-light-pink/theme.css",
+                "bundleName": "light-pink",
+                "inject": false
+              },
+              {
+                "input": "src/app/themes/aura-light-purple/theme.css",
+                "bundleName": "light-purple",
+                "inject": false
+              },
+              {
+                "input": "src/app/themes/aura-light-teal/theme.css",
+                "bundleName": "light-teal",
+                "inject": false
+              }
             ],
             "scripts": []
           },
@@ -79,8 +189,6 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "polyfills": [
-              "zone.js",
-              "zone.js/testing"
             ],
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
