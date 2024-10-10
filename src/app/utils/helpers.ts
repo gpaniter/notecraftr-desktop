@@ -98,4 +98,29 @@ function isDev() {
   return window.location.host.startsWith("localhost:");
 }
 
+export function setToDatabase<T>(key: string, data: T) {
+  const v = JSON.stringify(data);
+  localStorage.setItem(key, v);
+}
+
+export function getFromDatabase<T>(key: string): T | undefined {
+  const newData = localStorage.getItem(key);
+  if (typeof newData === "string") {
+    const parsed = JSON.parse(newData, sectionDateRevicer);
+    return parsed ? (parsed as T) : undefined;
+  } else return undefined;
+}
+
+export function sectionDateRevicer(key: string, value: any) {
+  if (key == "dateValue") {
+    try {
+      return new Date(value);
+    } catch (error) {
+      console.log(error, "Created new Date object.");
+      return new Date();
+    }
+  }
+  return value;
+}
+
 
