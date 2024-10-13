@@ -1,0 +1,235 @@
+<div class="main-container" [class]="data.backgroundClass">
+  <div class="form-container">
+    <div class="title-container">
+      <p-floatLabel>
+        <input
+          type="text"
+          id="title"
+          ncInputContext
+          pInputText
+          autocomplete="off"
+          [formControl]="titleFormControl"
+        />
+        <label for="title">Title</label>
+      </p-floatLabel>
+    </div>
+    <div class="prefix-container">
+      <p-floatLabel>
+        <input
+          type="text"
+          id="prefix"
+          ncInputContext
+          pInputText
+          autocomplete="off"
+          pTooltip="Text that will be added before the selected value. (Optional)"
+          tooltipPosition="bottom"
+          showDelay="1000"
+          hideDelay="300"
+          [formControl]="prefixFormControl"
+        />
+        <label for="prefix">Prefix (Optional)</label>
+      </p-floatLabel>
+    </div>
+    <div class="suffix-container">
+      <p-floatLabel>
+        <input
+          type="text"
+          id="suffix"
+          ncInputContext
+          pInputText
+          autocomplete="off"
+          pTooltip="Text that will be added after the selected value. (Optional)"
+          tooltipPosition="bottom"
+          showDelay="1000"
+          hideDelay="300"
+          [formControl]="suffixFormControl"
+        />
+        <label for="suffix">Suffix (Optional)</label>
+      </p-floatLabel>
+    </div>
+    @if (typeFormControl.value == "multiple") {
+    <div class="separator-container">
+      <p-floatLabel>
+        <input
+          type="text"
+          id="separator"
+          pInputText
+          ncInputContext
+          autocomplete="off"
+          pTooltip="Text that will be added in between the selected multiple values. (Optional)"
+          tooltipPosition="bottom"
+          showDelay="1000"
+          hideDelay="300"
+          [formControl]="separatorFormControl"
+        />
+        <label for="separator">Separator (Optional)</label>
+      </p-floatLabel>
+    </div>
+    }
+    <div class="top-buttons">
+      <span class="input-label">Section Type</span>
+      <p-selectButton
+        [options]="typeOptions"
+        [formControl]="typeFormControl"
+        optionLabel="label"
+        optionValue="value"
+        optionDisabled="disabled"
+        [pTooltip]="typeTooltip"
+        tooltipPosition="bottom"
+        showDelay="1000"
+        hideDelay="300"
+      />
+    </div>
+    @if (typeFormControl.value == "single" || typeFormControl.value ==
+    "multiple") {
+
+    <div class="multiselect-options-container">
+      <div class="add-option-button">
+        <p-button
+          class="add-option-button"
+          severity="secondary"
+          pTooltip="Add Text Option"
+          tooltipPosition="top"
+          showDelay="1000"
+          hideDelay="300"
+          (onClick)="addNewOption()"
+        >
+          <div class="add-options-button-container">
+            <span class="mingcute--add-fill"></span>
+            <span> Add Text Option </span>
+          </div>
+        </p-button>
+      </div>
+      <div
+        class="options-container"
+        cdkDropList
+        (cdkDropListDropped)="optionDrop($event)"
+      >
+        @for (option of options(); track $index; let idx = $index) {
+        <div
+          class="options-item-container"
+          cdkDragLockAxis="y"
+          cdkDrag
+          (mouseenter)="setOptionHovered(idx)"
+          (mouseleave)="setOptionHovered(-1)"
+          [cdkDragBoundary]="'.options-container'"
+        >
+          <textarea
+            type="text"
+            pInputTextarea
+            [rows]="1"
+            ncInputContext
+            autocomplete="off"
+            [placeholder]="'Option ' + (idx + 1)"
+            [value]="option"
+            (input)="onOptionInput($event, idx)"
+          ></textarea>
+          <div class="option-item-actions">
+            @if (hoveredOptionIndex() == idx) {
+
+            <div class="option-drag-handle" cdkDragHandle>
+              <span class="mingcute--dots-fill"></span>
+            </div>
+
+            <p-button
+              class="option-delete-button"
+              [rounded]="true"
+              icon="mingcute--delete-2-fill"
+              severity="danger"
+              [text]="true"
+              pTooltip="Delete"
+              tooltipPosition="right"
+              showDelay="1000"
+              hideDelay="300"
+              (onClick)="deleteOption($event, idx)"
+            >
+            </p-button>
+            }
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+    } @else if (typeFormControl.value == "date") {
+    <div class="date-format-options-container">
+      <p-floatLabel>
+        <p-dropdown
+          id="date-format"
+          [options]="dateFormatOptions"
+          [formControl]="dateFormatFormControl"
+          placeholder="Date Format"
+        />
+        <label for="date-format">Date Format</label>
+      </p-floatLabel>
+      @if (dateFormatFormControl.value == "Custom") {
+
+      <input
+        type="text"
+        id="date-format-custom"
+        placeholder="Example: DD ~ MM ~ YYYY"
+        pInputText
+        ncInputContext
+        autocomplete="off"
+        pTooltip="For custom date format reference, see table below."
+        tooltipPosition="bottom"
+        showDelay="1000"
+        hideDelay="300"
+        [formControl]="customDateFormatFormControl"
+      />
+      }
+      <p-inplace>
+        <ng-template pTemplate="display">
+          <span>Date Format Reference</span>
+        </ng-template>
+        <ng-template pTemplate="content">
+          <p-table
+            [value]="customDateReference"
+            [tableStyle]="{ 'max-width': '12rem' }"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Code</th>
+                <th>Example Output</th>
+                <th>Description</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-reference>
+              <tr>
+                <td>{{ reference.code }}</td>
+                <td>{{ reference.exampleOutput }}</td>
+                <td>{{ reference.description }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </ng-template>
+      </p-inplace>
+    </div>
+    }
+  </div>
+  <div class="actions-container">
+    <p-button
+      label="Save"
+      severity="primary"
+      (onClick)="confirm()"
+      [disabled]="!titleFormControl.value || !typeFormControl.value"
+    ></p-button>
+    <p-button
+      label="Cancel"
+      severity="secondary"
+      (onClick)="cancel()"
+    ></p-button>
+  </div>
+</div>
+
+<ng-template #typeTooltip>
+  <div>
+    <b>Section Type</b> <br /><br />
+    <span> <b>Single</b> - Limits selection to single value. </span>
+    <br />
+    <span> <b>Multiple</b> - Enables selecting multiple values. </span>
+    <br />
+    <span> <b>Input</b> - Uses text input to type custom texts as value. </span>
+    <br />
+    <span> <b>Date</b> - Uses date picker to select date as value. </span>
+  </div>
+</ng-template>

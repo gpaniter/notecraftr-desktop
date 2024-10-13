@@ -1,0 +1,28 @@
+<div class="main-container">
+    <div class="title-container">
+      <p-floatLabel>
+        <input
+          type="text"
+          id="title"
+          ncInputContext
+          pInputText
+          [formControl]="titleFormControl"
+        />
+        <label for="title">Title</label>
+      </p-floatLabel>
+    </div>
+    <div class="actions-container">
+      <p-button
+        label="Save"
+        severity="primary"
+        (onClick)="confirm()"
+        [disabled]="!titleFormControl.value"
+      ></p-button>
+      <p-button
+        label="Cancel"
+        severity="secondary"
+        (onClick)="cancel()"
+      ></p-button>
+    </div>
+  </div>
+  
