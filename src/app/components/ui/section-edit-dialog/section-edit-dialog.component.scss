@@ -1,0 +1,108 @@
+.main-container {
+    display: grid;
+    min-width: 25rem;
+    row-gap: 2.5rem;
+    padding: 2rem;
+    padding-top: 0rem;
+    // min-height: 10rem;
+    // background: rgba(253, 253, 253, 0);
+    // border-radius: 16px;
+    // box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    // backdrop-filter: blur(5px);
+    // -webkit-backdrop-filter: blur(5px);
+    // border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  .actions-container {
+    display: grid;
+    grid-auto-flow: column;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: end;
+  }
+  
+  .form-container {
+    display: grid;
+  }
+  
+  .top-buttons {
+    display: grid;
+      padding-top: 0.5rem;
+  }
+  
+  .title-container, .prefix-container, .suffix-container, .separator-container {
+    padding-top: 1.7rem;
+  }
+  
+  .option-drag-handle {
+      cursor: move;
+  }
+  
+  .options-container {
+    display: grid;
+    gap: 0.5rem;
+  }
+  .date-format-options-container {
+    display: grid;
+    padding-top: 2rem;
+    gap: 1.8rem;
+  }
+
+  .input-label {
+    font-size: small;
+    color: var(--text-color-secondary);
+    padding-left: 0.8rem;
+    padding-bottom: 0.5rem;
+  }
+  
+  .options-item-container,
+  .option-item-actions {
+    display: grid;
+    gap: 0.5rem;
+    grid-auto-columns: auto;
+    grid-auto-flow: column;
+    align-items: center;
+    width: max-content;
+    min-height: 2.5rem;
+  }
+  .cdk-drag-placeholder {
+    opacity: 0;
+  }
+  
+  //   .cdk-drag-preview {
+  //     box-sizing: border-box;
+  //     border-radius: 6px;
+  //     box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+  //       0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  //   }
+  
+  .top-buttons {
+      width: max-content;
+  }
+  
+  .cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+  
+  .options-container.cdk-drop-list-dragging
+    .options-container:not(.cdk-drag-placeholder) {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+  
+  .option-item-actions {
+    min-width: 4rem;
+    // background-color: aqua;
+  }
+  
+  .multiselect-options-container {
+      display: grid;
+      gap: 0.5rem;
+      padding-top: 2rem;
+  }
+
+  .add-options-button-container {
+    display: grid;
+    grid-auto-flow: column;
+    gap: 0.3rem;
+    align-items: center;
+  }

@@ -1,0 +1,161 @@
+<div
+  class="main-container"
+  #container
+  [class]="section().backgroundClass || ''"
+  [ngClass]="{ inactive: !section().active }"
+  (mouseenter)="onMouseEnter($event)"
+  (mouseleave)="onMouseLeave($event)"
+>
+  <div class="header-container">
+    <p-checkbox [formControl]="checkedFormControl" [binary]="true" />
+    <span class="section-title">
+      <b>
+        {{ section().title }}
+      </b>
+    </span>
+
+    @if (section().linked && linkedSectionsEnabled()) {
+      <p-tag [severity]="linkedInfoVisible() ? 'info' : 'secondary'"
+      pTooltip="Section is linked to other section(s). Any changes made to this section will also reflect to linked section(s)."
+          tooltipPosition="bottom"
+          showDelay="1000"
+          hideDelay="300">
+        <div class="tag-content">
+          <span class="mingcute--link-2-fill icon-14"></span>
+          @if (linkedInfoVisible()) {
+            <span>{{section().id == section().linkedId ? "Parent" : "Linked"}}</span>
+          }
+        </div>
+      </p-tag>
+    }
+
+
+    <div
+      class="actions-container"
+      [ngClass]="{ 'actions-visible': actionsVisible() }"
+    >
+      @if (actionsVisible()) {
+
+      <p-button
+        class="edit-button"
+        [rounded]="true"
+        icon="fluent--edit-12-filled"
+        severity="secondary"
+        [text]="true"
+        pTooltip="Edit"
+        tooltipPosition="bottom"
+        showDelay="1000"
+        hideDelay="300"
+        (onClick)="editSection()"
+      >
+      </p-button>
+
+      @if (linkedSectionsEnabled()) {
+        <p-button
+          class="create-linked-section-button"
+          [rounded]="true"
+          icon="mingcute--link-2-fill"
+          severity="secondary"
+          [text]="true"
+          pTooltip="Create Linked Section"
+          tooltipPosition="bottom"
+          showDelay="1000"
+          hideDelay="300"
+          (onClick)="createLinkedSection()"
+        >
+        </p-button>
+
+      }
+
+      
+      <p-button
+        class="duplicate-button"
+        [rounded]="true"
+        icon="mingcute--copy-2-fill"
+        severity="secondary"
+        [text]="true"
+        pTooltip="Duplicate"
+        tooltipPosition="bottom"
+        showDelay="1000"
+        hideDelay="300"
+        (onClick)="duplicateSection()"
+      >
+      </p-button>
+      <p-button
+        class="delete-button"
+        severity="danger"
+        [rounded]="true"
+        icon="mingcute--delete-2-fill"
+        [text]="true"
+        pTooltip="Delete"
+        tooltipPosition="bottom"
+        showDelay="1000"
+        hideDelay="300"
+        (onClick)="requestDeleteSection()"
+      >
+      </p-button>
+      }
+    </div>
+  </div>
+  <div class="content-container">
+    @switch (section().type) { @case ("single") {
+    <p-dropdown
+      [options]="options()"
+      optionLabel="label"
+      [formControl]="singleOptionFormControl"
+      placeholder="Select Option"
+    ></p-dropdown>
+    } @case ("multiple") {
+    <p-multiSelect
+      [options]="options()"
+      [selectedItemsLabel]="multiselectLabel()"
+      [formControl]="multiOptionsFormControl"
+      optionLabel="label"
+      placeholder="Select Options"
+    />
+
+    } @case ("date") {
+    <p-calendar 
+    [formControl]="dateFormControl"
+    [showTime]="true" 
+    [hourFormat]="dateHourFormat()"
+    
+    />
+    } @default {
+    <input
+      ncInputContext
+      autocomplete="off"
+      type="text"
+      pInputText
+      [formControl]="inputFormControl"
+    />
+    } }
+  </div>
+  <div
+    class="drag-handle"
+    [pTooltip]="handleTooltipContent"
+    tooltipPosition="bottom"
+    showDelay="1000"
+    hideDelay="300"
+    [ngClass]="{
+      'handle-visible': actionsVisible(),
+      'handle-disabled': actionsVisible() && !!sectionsFilter()
+    }"
+    cdkDragHandle
+  >
+    <span class="mingcute--dots-vertical-fill"></span>
+  </div>
+  <ng-template #handleTooltipContent>
+    <div class="flex align-items-center">
+      @if (!!sectionsFilter()) {
+
+      <span>
+        <b>Move Disabled.</b> <br />
+        Clear filter first to move sections.
+      </span>
+      } @else {
+      <span>Move</span>
+      }
+    </div>
+  </ng-template>
+</div>

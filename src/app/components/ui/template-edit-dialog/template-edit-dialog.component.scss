@@ -1,0 +1,18 @@
+.main-container {
+    display: grid;
+    min-width: 20rem;
+    row-gap: 2.5rem;
+    // min-height: 10rem;
+}
+
+.actions-container {
+    display: grid;
+    grid-auto-flow: column;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: end;
+}
+
+.title-container {
+    padding-top: 2rem;
+}

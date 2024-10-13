@@ -1,0 +1,21 @@
+<div class="main-container">
+    <div class="message-container">
+      {{ data.message }}
+    </div>
+    <div class="actions-container">
+      @if(data.yes){
+      <p-button
+        [label]="data.yes"
+        [severity]="data.buttonAppearance"
+        (onClick)="confirm()"
+      ></p-button>
+      } @if (data.no) {
+      <p-button
+        [label]="data.no"
+        severity="secondary"
+        (onClick)="cancel()"
+      ></p-button>
+      }
+    </div>
+  </div>
+  

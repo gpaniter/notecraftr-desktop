@@ -2,6 +2,7 @@ export type Section = {
     title: string;
     type: "multiple" | "single" | "input" | "date";
     id: number;
+    templateId: number;
     linked: boolean;
     linkedId: number;
     active: boolean;

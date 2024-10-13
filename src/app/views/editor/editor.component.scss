@@ -1,0 +1,106 @@
+.main-container {
+    display: grid;
+    position: relative;
+    height: 100%;
+    width: 100%;
+    grid-template-rows: auto 1fr;
+  
+    // --s: 150px; /* control the size*/
+    // --c1: var(--surface-100);
+    // --c2: var(--surface-ground);
+  
+    // --_g: #0000 90deg, var(--c1) 0;
+    // background: conic-gradient(from 90deg at 2px 2px, var(--_g)),
+    //   conic-gradient(from 90deg at 1px 1px, var(--_g)), var(--c2);
+    // background-size: var(--s) var(--s), calc(var(--s) / 5) calc(var(--s) / 5);
+  }
+  
+  .add-section-button {
+    position: fixed;
+    right: 1rem;
+    top: 4rem;
+    z-index: 4;
+  }
+  
+  .button-content-container {
+    display: grid;
+    grid-auto-flow: column;
+    gap: 0.4rem;
+    align-items: center;
+  }
+  
+  .searchbar-container {
+    display: grid;
+    grid-auto-flow: column;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: start;
+    padding-top: 1rem;
+    padding-left: 1rem;
+    padding-bottom: 0.5rem;
+    // top: 1rem;
+    // left: 2rem;
+    // position: sticky;
+  }
+  
+  .sections-container {
+    display: grid;
+    padding: 1rem;
+    // background-color: aqua;
+    //   overflow: hidden;
+    width: 100%;
+    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+    gap: 0.5rem;
+    grid-auto-rows: min-content;
+    //   padding-right: 3rem;
+  }
+  
+  .section-item-container {
+    // z-index: 2;
+    transform: none;
+    // transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+  
+  .custom-placeholder {
+    display: grid;
+    background-color: var(--highlight-bg);
+    height: 100%;
+    width: 100%;
+    min-height: 6.5rem;
+    // border: 2px dashed var(--text-color-secondary);
+    border-radius: 6px;
+    box-sizing: border-box;
+  }
+  
+  .cdk-drag-preview {
+    box-sizing: border-box;
+    border-radius: 6px;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+      0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  }
+  
+  .cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+  
+  .sections-container.cdk-drop-list-dragging
+    .section-item-container:not(.cdk-drag-placeholder) {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+  
+  .cdk-drag-placeholder {
+    // opacity: 0;
+  }
+  
+  .call-to-action-container {
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: 1rem;
+    color: var(--text-color-secondary);
+    text-align: center;
+    font-size: large;
+  }
+  
+  
+  

@@ -7,7 +7,7 @@ import {
 } from "@angular/core";
 import { MenuModule } from "primeng/menu";
 import { ButtonModule } from "primeng/button";
-import { MenuItem } from "primeng/api";
+import { MenuItem, Message } from "primeng/api";
 import { DialogService } from "primeng/dynamicdialog";
 import { TooltipModule } from "primeng/tooltip";
 import { NgClass } from "@angular/common";
@@ -24,20 +24,11 @@ import {
   writeTextToClipboard,
 } from "../../../lib/notecraftr-tauri";
 import { RippleModule } from "primeng/ripple";
-import { Store, StoreModule } from "@ngrx/store";
-import { editorInitialState, editorReducer } from "../../../state/editor/editor.reducer";
-import {
-  selectActiveTemplate,
-  selectAllTemplates,
-} from "../../../state/editor/editor.selectors";
+import { Store } from "@ngrx/store";
 import { getUniqueId } from "../../../utils/helpers";
-import * as editorActions from "../../../state/editor/editor.actions";
-import { EffectsFeatureModule, EffectsModule } from "@ngrx/effects";
-import { EditorEffects } from "../../../state/editor/editor.effects";
-import { selectMaximized } from "../../../state/window/window.selectors";
-import { maximize, unmaximize } from "../../../state/window/window.actions";
-import { CustomMessageService } from "../../../services/custom-message.service";
+import * as WindowState from "../../../state/window/";
 import { CustomDialogService } from "../../../services/custom-dialog.service";
+import * as EditorState from "../../../state/editor/";
 
 @Component({
   selector: "nc-menubar",
@@ -49,16 +40,16 @@ import { CustomDialogService } from "../../../services/custom-dialog.service";
 })
 export class MenubarComponent {
   store = inject(Store);
-  customMessage = inject(CustomMessageService);
+  dialogService = inject(DialogService);
   customDialog = inject(CustomDialogService);
-  output = signal("");
-  autoCopyOnTemplateChange = signal(false);
-  autoCopyOnOutputChange = signal(false);
-  addonsEnabled = signal(false);
-  activeUrl = signal("");
-  maximized = this.store.selectSignal(selectMaximized);
-  templates = this.store.selectSignal(selectAllTemplates);
-  activeTemplate = this.store.selectSignal(selectActiveTemplate);
+  output = this.store.selectSignal(EditorState.output);
+  autoCopyOnTemplateChange = this.store.selectSignal(WindowState.autoCopyOnTemplateChange);
+  autoCopyOnOutputChange = this.store.selectSignal(WindowState.autoCopyOnOutputChange);
+  addonsEnabled = this.store.selectSignal(WindowState.addonsEnabled);
+  activeUrl = this.store.selectSignal(WindowState.activeUrl);
+  maximized = this.store.selectSignal(WindowState.maximized);
+  templates = this.store.selectSignal(EditorState.templates);
+  activeTemplate = this.store.selectSignal(EditorState.activeTemplate);
   appIcon = signal("");
   mouseHovered = signal(false);
   closeButtonHovered = signal(false);
@@ -77,24 +68,26 @@ export class MenubarComponent {
     const activeTemplate = this.activeTemplate();
     const activeFirst = activeTemplate ? [activeTemplate] : [];
     const filteredTemplates = activeFirst.concat(
-      templates.filter((t) => activeTemplate? (activeTemplate.id !== t.id) : true)
+      templates.filter((t) =>
+        activeTemplate ? activeTemplate.id !== t.id : true
+      )
     );
     const templateOptions: MenuItem[] = filteredTemplates
-    // .filter((t) => activeTemplate && activeTemplate.id !== t.id)
-    .map((t) => ({
-      label: t.title,
-      disabled: !!activeTemplate && activeTemplate.id === t.id,
-      command: () => this.setAsActiveTemplate(t.id),
-    }))
+      // .filter((t) => activeTemplate && activeTemplate.id !== t.id)
+      .map((t) => ({
+        label: t.title,
+        disabled: !!activeTemplate && activeTemplate.id === t.id,
+        command: () => this.setAsActiveTemplate(t.id),
+      }));
 
     if (templateOptions.length > 0) {
-      templateOptions.push({ separator: true })
+      templateOptions.push({ separator: true });
     }
     templateOptions.push({
       label: "New Template",
-        icon: "mingcute--add-fill",
-        command: () => this.createNewTemplate(),
-    })
+      icon: "mingcute--add-fill",
+      command: () => this.createNewTemplate(),
+    });
     return templateOptions;
   });
 
@@ -139,7 +132,7 @@ export class MenubarComponent {
 
   activeTemplateTitle = computed(() => {
     const temp = this.activeTemplate();
-    if (!temp) return "No Template";
+    if (!temp) return "No Active Template";
 
     return temp.title;
   });
@@ -165,7 +158,6 @@ export class MenubarComponent {
         return "Notecraftr";
     }
   });
-  
 
   async ngOnInit() {
     this.appIcon.set(fileSrcToUrl("icons/32x32.png"));
@@ -183,16 +175,8 @@ export class MenubarComponent {
       startDragging();
     } else if (isDoubleClick) {
       this.toggleRestoreApp();
-      console.log(1)
+      console.log(1);
     }
-
-  }
-  
-  @HostListener("document:contextmenu", ["$event"])
-  debugg(event: MouseEvent) {
-    event.preventDefault();
-    console.log(this.templates())
-
   }
 
   addNote() {
@@ -203,9 +187,7 @@ export class MenubarComponent {
     let templates = this.templates();
     let template = templates.find((t) => t.id === id);
     if (!template) return;
-    this.store.dispatch(editorActions.setActiveTemplate({ template }));
-    // this.notecraftrService.setAsActiveTemplate(template, templates);
-    // this.notecraftrService.saveTemplates(templates);
+    this.store.dispatch(EditorState.setActiveTemplate({ template }));
     if (this.autoCopyOnTemplateChange() && !this.autoCopyOnOutputChange()) {
       setTimeout(() => this.autoCopyOutputToClipboard(), 100);
     }
@@ -213,20 +195,21 @@ export class MenubarComponent {
 
   autoCopyOutputToClipboard() {
     writeTextToClipboard(this.output()).then(() => {
-      this.customMessage.showMessage.emit({
-        severity: 'success',
-        summary: 'Auto Copy',
+      const message: Message = {
+        severity: "success",
+        summary: "Auto Copy",
         detail: "Output automatically copied to clipboard.",
-      })
+      };
+      this.store.dispatch(WindowState.showMessage({ message }));
     });
   }
 
   toggleRestoreApp() {
     if (this.maximized()) {
-      unmaximizeWindow()
+      unmaximizeWindow();
       return;
     }
-    maximizeWindow()
+    maximizeWindow();
   }
 
   closeApp() {
@@ -247,63 +230,61 @@ export class MenubarComponent {
 
   requestDeleteTemplate() {
     let templates = this.templates();
-    let template = templates.find((t) => t.active);
+    let template = this.activeTemplate();
     if (!template) return;
-    this.store.dispatch(editorActions.deleteTemplate({ template }));
+    const templateName = template.title
+      ? '"' + template.title + '"'
+      : "this template";
 
-    // this.windowService.openConfirmDialog(
-    //   this.dialogService,
-    //   {
-    //     header: "Delete Template",
-    //     message: "Are you sure you want to delete this template?",
-    //     buttonAppearance: "danger",
-    //     yes: "Delete",
-    //     no: "Cancel",
-    //   },
-    //   (v) => {
-    //     templates = templates.filter((t) => t.id !== template.id);
-    //     if (templates.length === 0) {
-    //       this.notecraftrService.addDefaultTemplates(templates)
-    //     } else {
-    //       const firstId = templates[0].id;
-    //       for (let t of templates) {
-    //         t.active = t.id === firstId;
-    //       }
-    //     }
-    //     this.notecraftrService.moveActiveTemplateToTop(templates);
-    //     this.notecraftrService.saveTemplates(templates);
-
-    //     this.windowService.showMessage.emit({
-    //       severity: "error",
-    //       summary: "Template Deleted",
-    //       detail: `Template "${template.title}" deleted.`,
-    //     });
-    //   },
-    //   () => this.windowService.showMessage.emit({
-    //     severity: "secondary",
-    //     summary: "Cancelled",
-    //     detail: "Template deletion was cancelled",
-    //   })
-    // );
+    this.customDialog.openConfirmDialog(
+      this.dialogService,
+      {
+        header: "Delete Template",
+        message: `Are you sure you want to delete ${templateName}?`,
+        buttonAppearance: "danger",
+        yes: "Delete",
+        no: "Cancel",
+      },
+      (v) => {
+        
+        const message: Message = {
+          severity: "error",
+          summary: "Template Deleted",
+          detail: template.title
+            ? `Template ${templateName} deleted.`
+            : "A template was deleted",
+        };
+        this.store.dispatch(WindowState.showMessage({ message }));
+        this.store.dispatch(EditorState.deleteTemplate({ template }));
+        this.store.dispatch(EditorState.setLastTemplateAsActive());
+        // Check if templates are empty
+        templates = templates.filter((t) => t.id !== template.id);
+        if (templates.length === 0) {
+          // this.store.dispatch(EditorState.createDefaultTemplate());
+        }
+      },
+      () => {
+        const message: Message = {
+          severity: "secondary",
+          summary: "Cancelled",
+          detail: "Template deletion was cancelled",
+        }
+        this.store.dispatch(WindowState.showMessage({message}));
+      }
+    );
   }
 
   duplicateTemplate() {
-    let templates = this.templates();
     let template = this.activeTemplate();
     if (!template) return;
-
-    const newTemp = {
-      ...template,
-      id: getUniqueId(templates.map((t) => t.id)),
-    };
-    this.store.dispatch(editorActions.duplicateTemplate({template}));
-    // this.store.dispatch(editorActions.setActiveTemplate({ template: newTemp }));
-
-    this.customMessage.showMessage.emit({
+    this.store.dispatch(EditorState.duplicateTemplate({ template }));
+    this.store.dispatch(EditorState.setLastTemplateAsActive());
+    const message: Message = {
       severity: "success",
       summary: "Template Duplicated",
       detail: `Template "${template.title}" duplicated.`,
-    });
+    };
+    this.store.dispatch(WindowState.showMessage({ message }));
   }
 
   requestEditTemplate() {
@@ -311,20 +292,24 @@ export class MenubarComponent {
     let template = templates.find((t) => t.active);
     if (!template) return;
 
-    //   this.windowService.openTemplateEditDialog(this.dialogService, template, (newTemp) => {
-    //     this.notecraftrService.saveTemplate(newTemp, templates);
-    //     this.windowService.showMessage.emit({
-    //       severity: "info",
-    //       summary: "Template Updated",
-    //       detail: `Template "${newTemp.title}" updated.`,
-    //     });
-    //   },
-    //   () => this.windowService.showMessage.emit({
-    //     severity: "secondary",
-    //     summary: "Cancelled",
-    //     detail: "Template edit was cancelled",
-    //   })
-    // );
+      this.customDialog.openTemplateEditDialog(this.dialogService, template, (newTemp) => {
+        this.store.dispatch(EditorState.updateTemplate({ template: newTemp }));
+        const message: Message = {
+          severity: "info",
+          summary: "Template Updated",
+          detail: `Template "${newTemp.title}" updated.`,
+        };
+        this.store.dispatch(WindowState.showMessage({ message }));
+      },
+      () => {
+        const message: Message = {
+          severity: "secondary",
+          summary: "Cancelled",
+          detail: "Template edit was cancelled",
+        }
+        this.store.dispatch(WindowState.showMessage({message}));
+      }
+    );
   }
 
   createNewTemplate() {
@@ -335,14 +320,14 @@ export class MenubarComponent {
       sections: [],
       active: false,
     };
-    this.store.dispatch(editorActions.addTemplate({ template: newTemp }));
-    this.store.dispatch(editorActions.setActiveTemplate({ template: newTemp }));
-
-    this.customMessage.showMessage.emit({
+    this.store.dispatch(EditorState.addTemplate({ template: newTemp }));
+    this.store.dispatch(EditorState.setActiveTemplate({ template: newTemp }));
+    const message: Message = {
       severity: "success",
       summary: "Template Added",
       detail: "New template added.",
-    });
+    };
+    this.store.dispatch(WindowState.showMessage({ message }));
   }
 
   updateMouseHovered(value: boolean) {

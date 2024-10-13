@@ -7,7 +7,7 @@ import { DialogService } from "primeng/dynamicdialog";
 import { listen, UnlistenFn } from '@tauri-apps/api/event';
 import { isMaximized, onResized } from './lib/notecraftr-tauri';
 import { Store } from '@ngrx/store';
-import * as WindowActions from './state/window/window.actions';
+import * as WindowState from './state/window';
 import { CustomMessageService } from './services/custom-message.service';
 import { CustomDialogService } from './services/custom-dialog.service';
 import { Subscription } from 'rxjs';
@@ -26,8 +26,8 @@ export class AppComponent implements OnInit {
   customDialog = inject(CustomDialogService);
   messageService = inject(MessageService);
   dialogService = inject(DialogService);
-
-  showMessage$: Subscription | undefined;
+  message = this.store.select(WindowState.message);
+  messageChange$: Subscription | undefined;
   
   windowResize$: UnlistenFn | undefined;
   windowClose$: UnlistenFn | undefined;
@@ -39,7 +39,8 @@ export class AppComponent implements OnInit {
       this.checkWindowMaximized();
     });
 
-    this.showMessage$ = this.customMessage.showMessage.subscribe((message) => {
+    this.messageChange$ = this.message.subscribe((message) => {
+      if (!message) return;
       this.messageService.add({ ...message, key: "bl" });
     });
 
@@ -64,10 +65,10 @@ export class AppComponent implements OnInit {
   checkWindowMaximized() {
     isMaximized().then((maximized) => {
       if (maximized) {
-        this.store.dispatch(WindowActions.maximize());
+        this.store.dispatch(WindowState.maximize());
         return
       }
-      this.store.dispatch(WindowActions.unmaximize());
+      this.store.dispatch(WindowState.unmaximize());
     });
   }
 }
