@@ -1,0 +1,49 @@
+.main-container {
+    display: grid;
+    position: relative;
+    padding: 1rem;
+    height: 100%;
+    align-content: start;
+
+    --s: 350px; /* control the size*/
+  --c1: var(--complimentary-color-b);
+  --c2: var(--surface-card);
+
+  --_g: var(--c1) 6.1%, var(--c2) 6.4% 18.6%, var(--c1) 18.9% 31.1%,
+    var(--c2) 31.4% 43.6%, var(--c1) 43.9% 56.1%, var(--c2) 56.4% 68.6%,
+    #0000 68.9%;
+  background: radial-gradient(var(--s) at 100% 0, var(--_g)),
+    radial-gradient(var(--s) at 0 0, var(--_g)),
+    radial-gradient(var(--s) at 0 100%, var(--_g)),
+    radial-gradient(var(--s) at 100% 100%, var(--_g)) var(--c1);
+  background-size: var(--s) var(--s);
+
+
+}
+
+.back-home-button {
+  width: min-content;
+}
+
+.about-button {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+}
+.base-setting-container {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.setting-title {
+  // font-weight: 600;
+}
+
+.setting-description {
+  color: var(--text-color-secondary);
+}
+
+.options-container {
+    padding-top: 1rem;
+    display: grid;
+}

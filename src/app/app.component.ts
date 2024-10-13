@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, effect, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MenubarComponent } from './components/ui/menubar/menubar.component';
 import { ToastModule } from 'primeng/toast';
@@ -21,6 +21,7 @@ import { Subscription } from 'rxjs';
 })
 export class AppComponent implements OnInit {
   store = inject(Store);
+  theme = this.store.selectSignal(WindowState.theme);
   primengConfig = inject(PrimeNGConfig);
   customMessage = inject(CustomMessageService);
   customDialog = inject(CustomDialogService);
@@ -31,6 +32,14 @@ export class AppComponent implements OnInit {
   
   windowResize$: UnlistenFn | undefined;
   windowClose$: UnlistenFn | undefined;
+
+  themeChange$ = effect(() => {
+    const t = this.theme();
+    const linkEl = document.querySelector("link[rel='stylesheet']") as HTMLLinkElement;
+    if (linkEl) {
+      linkEl.href = `${t.theme}-${t.color}.css`;
+    }
+  })
 
 
   async ngOnInit(): Promise<void> {

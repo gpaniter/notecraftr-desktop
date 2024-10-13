@@ -13,6 +13,7 @@ import { EffectsModule, provideEffects } from "@ngrx/effects";
 import { editorReducer } from "./state/editor/editor.reducer";
 import { EditorEffects } from "./state/editor/editor.effects";
 import { windowReducer } from "./state/window/window.reducer";
+import { WindowEffects } from "./state/window";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -21,7 +22,7 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom([BrowserAnimationsModule]),
     provideStore({ window: windowReducer, editor: editorReducer }),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
-    provideEffects(EditorEffects),
+    provideEffects(EditorEffects, WindowEffects),
     // importProvidersFrom(EffectsModule.forRoot([EditorEffects]))
   ],
 };

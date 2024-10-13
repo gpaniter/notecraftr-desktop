@@ -54,3 +54,8 @@ export const updateLinkedSectionsEnabled = createAction(
     '[Window] Update Linked Sections Enabled',
     props<{ enabled: boolean }>()
 )
+
+export const updateAddonsEnabled = createAction(
+    '[Window] Update Addons Enabled',
+    props<{ enabled: boolean }>()
+)

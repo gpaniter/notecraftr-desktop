@@ -93,6 +93,14 @@ export const windowReducer = createReducer(
         };
     }),
 
+    // Update Addons Enabled
+    on(WindowActions.updateAddonsEnabled, (state, { enabled }) => {
+        return {
+            ...state,
+            addonsEnabled: enabled
+        };
+    }),
+
     // Show message
     on(WindowActions.showMessage, (state, { message }) => {
         return {
