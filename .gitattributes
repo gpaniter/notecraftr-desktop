@@ -1,1 +1,1 @@
-src/app/themes/* -linguist-detectable
+src/app/themes/* linguist-detectable=false
