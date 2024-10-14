@@ -19,7 +19,19 @@ export abstract class EffectsWrapper {
 @Injectable()
 export class EditorEffects extends EffectsWrapper {
 
-
+  consoleLogActions$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        tap((action) => {
+          if (true) {
+            console.log(action);
+          }
+        })
+      ),
+    {
+      dispatch: false,
+    }
+  );
   
 
   saveTemplates$ = createEffect(

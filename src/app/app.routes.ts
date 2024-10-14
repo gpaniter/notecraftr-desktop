@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { EditorComponent } from './views/editor/editor.component';
+import { SettingsComponent } from './views/settings/settings.component';
 
 export const routes: Routes = [
     {
@@ -11,10 +12,10 @@ export const routes: Routes = [
         redirectTo: '',
         pathMatch: 'full'
     },
-    // {
-    //     path: 'settings',
-    //     component: SettingsComponent
-    // },
+    {
+        path: 'settings',
+        component: SettingsComponent
+    },
     // {
     //     path: 'about',
     //     component: AboutComponent

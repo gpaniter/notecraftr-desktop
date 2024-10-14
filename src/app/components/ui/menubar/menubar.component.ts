@@ -175,7 +175,6 @@ export class MenubarComponent {
       startDragging();
     } else if (isDoubleClick) {
       this.toggleRestoreApp();
-      console.log(1);
     }
   }
 

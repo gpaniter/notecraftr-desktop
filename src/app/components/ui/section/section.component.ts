@@ -253,115 +253,19 @@ export class SectionComponent implements OnInit, OnDestroy {
   }
 
   requestDeleteSection() {
-    // let message = "Are you sure you want to delete this section?";
-    // if (
-    //   this.linkedSectionsEnabled() &&
-    //   this.section().linkedId === this.section().id
-    // ) {
-    //   message =
-    //     "Other sections are linked to this section. Deleting this will unlink these sections. Are you sure you want to continue?";
-    // }
-    // this.customDialog.openConfirmDialog(
-    //   this.dialogService,
-    //   {
-    //     header: "Delete Section",
-    //     message,
-    //     buttonAppearance: "danger",
-    //     yes: "Delete",
-    //     no: "Cancel",
-    //   },
-    //   (v) => {
-    //     if (v) {
-    //       this.deleteSection();
-    //     }
-    //   },
-    //   () =>
-    //     this.customMessage.showMessage.emit({
-    //       severity: "secondary",
-    //       summary: "Cancelled",
-    //       detail: "Section deletion was cancelled",
-    //     })
-    // );
     this.onSectionDelete.emit(this.section());
 
   }
 
   deleteSection() {
-    // let templates = this.templates();
-    // let template = templates.find((t) => t.active);
-    // if (!template) return;
-    // let section = this.section();
-    // this.store.dispatch(EditorActions.deleteSection({ section }));
-
-    // for (let i = 0; i < template.sections.length; i++) {
-    //   let sec = template.sections[i];
-    //   if (sec.linkedId === section.id) {
-    //     sec.linked = false;
-    //     sec.linkedId = -1;
-    //   }
-    // }
-
-    // let linked = template.sections.filter(
-    //   (s) => section.linkedId === s.linkedId && s.id !== section.linkedId
-    // );
-    // if (linked.length < 1) {
-    //   let parent = template.sections.find((s) => s.id === section.linkedId);
-    //   if (parent) {
-    //     parent.linkedId = -1;
-    //     parent.linked = false;
-    //   }
-    // }
-
-
-    // this.customMessage.showMessage.emit({
-    //   severity: "error",
-    //   summary: "Section Deleted",
-    //   detail: `Section "${this.section().title}" deleted.`,
-    // });
     this.onSectionDelete.emit(this.section());
   }
 
   duplicateSection() {
-    // let templates = this.templates();
-    // let template = templates.find((t) => t.active);
-    // if (!template) return;
-    // this.store.dispatch(EditorActions.duplicateSection({ section: this.section() }));
-    // this.customMessage.showMessage.emit({
-    //   severity: "success",
-    //   summary: "Section Duplicated",
-    //   detail: `Section "${this.section().title}" duplicated.`,
-    // });
     this.onDuplicateSection.emit(this.section());
   }
 
   editSection() {
-    // let templates = this.templates();
-    // let template = templates.find((t) => t.active);
-    // if (!template) return;
-    // this.customDialog.openSectionEditDialog(
-    //   this.dialogService,
-    //   this.section(),
-    //   (newSection) => {
-    //     if (!this.linkedSectionsEnabled()) {
-    //       EditorActions.updateSection({ section: newSection })
-    //     } else {
-    //       EditorActions.updateAllLinkedSections({ section: newSection })
-    //     }
-
-    //     this.customMessage.showMessage.emit({
-    //       severity: "info",
-    //       summary: "Section Updated",
-    //       detail: `Section "${newSection.title}" updated.`,
-    //     });
-    //   },
-    //   () => {
-    //     this.customMessage.showMessage.emit({
-    //       severity: "secondary",
-    //       summary: "Cancelled",
-    //       detail: "Section edit was cancelled",
-    //     });
-    //   }
-    // );
     this.onSectionEditDialog.emit(this.section());
   }
 

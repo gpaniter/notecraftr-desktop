@@ -4,7 +4,6 @@ import { ButtonModule } from 'primeng/button';
 import { debounceTime, map, startWith, Subscription } from 'rxjs';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { TooltipModule } from 'primeng/tooltip';
-import { DatabaseService } from '../../../services/database.service';
 import { CustomMessageService } from '../../../services/custom-message.service';
 import { Store } from '@ngrx/store';
 import { writeTextToClipboard } from '../../../lib/notecraftr-tauri';

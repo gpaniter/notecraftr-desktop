@@ -1,0 +1,111 @@
+<div class="main-container">
+  <p-button
+    pTooltip="Back"
+    tooltipPosition="bottom"
+    showDelay="1000"
+    hideDelay="300"
+    class="back-home-button"
+    icon="fluent--arrow-hook-up-left-16-regular icon-24"
+    [text]="true"
+    [rounded]="true"
+    (onClick)="onBackClick()"
+  ></p-button>
+  <p-button
+    pTooltip="About NoteCraftr"
+    tooltipPosition="bottom"
+    showDelay="1000"
+    hideDelay="300"
+    class="about-button"
+    icon="fluent--info-12-filled icon-24"
+    [text]="true"
+    [rounded]="true"
+    routerLink="/about"
+  ></p-button>
+  <div class="options-container">
+    <div class="base-setting-container">
+      <span class="setting-title"><b>Appearance</b></span>
+      <label class="setting-description" for="theme-theme">Select Theme</label>
+      <p-dropdown
+        id="theme-theme"
+        [options]="themes"
+        optionLabel="name"
+        [formControl]="themeFormControl"
+      />
+      <label class="setting-description" for="theme-color">Select Color</label>
+      <p-dropdown
+        id="theme-color"
+        [options]="colors"
+        optionLabel="name"
+        [formControl]="colorFormControl"
+      />
+    </div>
+
+    <p-divider />
+
+    <div class="base-setting-container">
+      <label class="setting-title" for="auto-copy"
+        ><b>Auto Copy Output</b></label
+      >
+      <span class="setting-description"
+        ><b>On Template Change</b> - Automatically copy the text output once the
+        template is changed.</span
+      >
+      <p-inputSwitch
+        id="auto-copy"
+        [formControl]="autoCopyOnTemplateChangeFormControl"
+      />
+      <span class="setting-description"
+        ><b>On Text Output Change</b> - Automatically copy the text output once
+        the text output is changed.</span
+      >
+      <p-inputSwitch
+        id="auto-copy-output"
+        [formControl]="autoCopyOnOutputChangeFormControl"
+      />
+    </div>
+
+    <p-divider />
+
+    <div class="base-setting-container">
+      <label class="setting-title" for="linked-sections"
+        ><b>Linked Sections</b></label
+      >
+      <span class="setting-description">
+        <i
+          >The <b>Linked Sections</b> feature allows you to update repeated
+          details throughout a document with a single change. When you modify a
+          linked section, such as title, options, or text value, every instance
+          of that section is automatically updated, ensuring consistency and
+          saving you time.</i
+        >
+      </span>
+      <p-inputSwitch
+        id="linked-sections"
+        [formControl]="linkedSectionsEnabledFormControl"
+      />
+    </div>
+
+    <p-divider />
+
+    <div class="base-setting-container">
+      <label class="setting-title" for="addons"><b>Add-Ons</b></label>
+      <span class="setting-description">
+        <i>Enable new app features to improve your workflow.</i>
+      </span>
+      <p-inputSwitch
+        id="addons"
+        [formControl]="addonsEnabledFormControl"
+      />
+    </div>
+
+    <p-divider />
+
+    <div class="base-setting-container">
+      <label class="setting-title" for="startup"><b>Run at startup</b></label>
+      <span class="setting-description"
+        >NoteCraftr will launch automatically.</span
+      >
+      <p-inputSwitch id="startup" [formControl]="runAtStartUpFormControl" />
+    </div>
+  </div>
+</div>
