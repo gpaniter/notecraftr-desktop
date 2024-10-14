@@ -192,6 +192,12 @@ export class EditorComponent implements OnInit, OnDestroy {
   }
 
   sectionUpdate(section: Section) {
+    if (this.linkedSectionsEnabled()) {
+      this.store.dispatch(
+        EditorState.updateAllLinkedSections({ section: section })
+      );
+      return
+    }
     this.store.dispatch(EditorState.updateSection({ section }));
   }
 
@@ -273,7 +279,6 @@ export class EditorComponent implements OnInit, OnDestroy {
   createLinkedSection(section: Section) {
     let template = this.activeTemplate();
     if (!template) return;
-    section.linked = true;
     const linked = true;
     const linkedId = section.linkedId !== -1 ? section.linkedId : section.id;
     this.store.dispatch(

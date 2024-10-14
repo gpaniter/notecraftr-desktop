@@ -10,10 +10,10 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { provideStore } from "@ngrx/store";
 import { provideStoreDevtools } from "@ngrx/store-devtools";
 import { EffectsModule, provideEffects } from "@ngrx/effects";
-import { editorReducer } from "./state/editor/editor.reducer";
-import { EditorEffects } from "./state/editor/editor.effects";
+import { editorReducer } from "./state/editor/";
+import { EditorEffects } from "./state/editor/";
 import { windowReducer } from "./state/window/window.reducer";
-import { WindowEffects } from "./state/window";
+import { WindowEffects } from "./state/window/window.effects";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,7 +22,7 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom([BrowserAnimationsModule]),
     provideStore({ window: windowReducer, editor: editorReducer }),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
-    provideEffects(EditorEffects, WindowEffects),
-    // importProvidersFrom(EffectsModule.forRoot([EditorEffects]))
+    provideEffects([EditorEffects, WindowEffects]),
+    // importProvidersFrom(EffectsModule.forRoot([EditorEffects, WindowEffects]))
   ],
 };

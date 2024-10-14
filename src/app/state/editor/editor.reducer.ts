@@ -16,6 +16,8 @@ import {
   createDefaultTemplate,
   createLinkedSection,
   updateSection,
+  deleteSection,
+  duplicateSection,
 } from "./editor.actions";
 import { getFromDatabase, getUniqueId } from "../../utils/helpers";
 
@@ -28,9 +30,10 @@ export type EditorState = {
 
 export const editorInitialState: EditorState = {
   templates: getFromDatabase<Template[]>("notecraftr-templates") || [],
-  previewVisible: getFromDatabase<boolean>("notecraftr-preview-visible") || false,
+  previewVisible:
+    getFromDatabase<boolean>("notecraftr-preview-visible") || false,
   sectionsFilter: getFromDatabase<string>("notecraftr-sections-filter") || "",
-  output: ""
+  output: "",
 };
 
 export const editorReducer = createReducer(
@@ -114,9 +117,7 @@ export const editorReducer = createReducer(
       t.id === template.id
         ? {
             ...t,
-            sections: t.sections.map(
-              (s) => ({ ...s, active: enabled })
-            ),
+            sections: t.sections.map((s) => ({ ...s, active: enabled })),
           }
         : t
     ),
@@ -149,11 +150,12 @@ export const editorReducer = createReducer(
 
   // Update all linked sections
   on(updateAllLinkedSections, (state, { section }) => {
-    let templates = [...state.templates];
+    let templates = structuredClone(state.templates);
+
     for (let i = 0; i < templates.length; i++) {
       if (templates[i].active) {
         for (let j = 0; j < templates[i].sections.length; j++) {
-          let sec = templates[i].sections[i];
+          let sec = templates[i].sections[j];
           const isSameId = sec.id === section.id;
           const isLinked = sec.linked && sec.linkedId !== -1;
           const islinkedParent = isLinked && section.linkedId === sec.id;
@@ -161,7 +163,7 @@ export const editorReducer = createReducer(
             isLinked && !islinkedParent && section.linkedId === sec.linkedId;
 
           if (isLinked && (isSameId || islinkedParent || isLinkedChildren)) {
-            templates[i].sections[i] = {
+            templates[i].sections[j] = {
               ...section,
               id: sec.id,
               linked: sec.linked,
@@ -185,18 +187,97 @@ export const editorReducer = createReducer(
     };
   }),
 
-  // CreateLinkedSection
+  // Duplicate section
+  on(duplicateSection, (state, { section }) => ({
+    ...state,
+    templates: state.templates.map((t) =>
+      t.id === section.templateId
+        ? {
+            ...t,
+            sections: [
+              ...t.sections,
+              {
+                ...section,
+                title: section.title + " (Copy)",
+                id: getUniqueId(t.sections.map((s) => s.id)),
+              },
+            ],
+          }
+        : t
+    ),
+  })),
+
+  // Delete section
+  on(
+    deleteSection,
+    (state, { section }) => {
+      let template = structuredClone(state.templates.find((t) => t.active));
+      if (!template) return state;
+      template.sections = template.sections
+        .filter((s) => s.id !== section.id)
+        .map((s) =>
+          s.linkedId == section.id ? { ...s, linkedId: -1, linked: false } : s
+        );
+
+      // Check if linked parent exist
+      const linkedParent = template.sections.find(
+        (s) => s.id === section.linkedId
+      );
+      if (linkedParent) {
+        const linkedChildren = template.sections.filter(
+          (s) => s.linkedId === linkedParent.id && s.id !== s.linkedId
+        );
+        if (linkedChildren.length <= 0) {
+          // Remove parent attribute
+          template.sections = template.sections.map((s) =>
+            s.id === linkedParent.id ? { ...s, linked: false, linkedId: -1 } : s
+          );
+        }
+      }
+
+      return {
+        ...state,
+        templates: state.templates.map((t) =>
+          t.id === section.templateId ? template : t
+        ),
+      };
+    }
+
+    // ({
+    //   ...state,
+    //   templates: state.templates.map((t) =>
+    //     t.id === section.templateId
+    //       ? {
+    //           ...t,
+    //           sections: t.sections
+    //             .filter((s) => s.id !== section.id)
+    //             .map((s) =>
+    //               s.linkedId == section.id
+    //                 ? { ...s, linkedId: -1, linked: false }
+    //                 : s
+    //             ),
+    //         }
+    //       : t
+    //   ),
+    // })
+  ),
+
+  // Create Linked Section
   on(createLinkedSection, (state, { section }) => {
-    const template = state.templates.find(t => t.active);
+    const template = state.templates.find((t) => t.active);
     if (!template) return state;
     const linkedSection = {
       ...section,
       id: getUniqueId(template.sections.map((s) => s.id)),
-    }
+      linked: true,
+      linkedId: section.linkedId !== -1 ? section.linkedId : section.id,
+    };
     return {
       ...state,
       templates: state.templates.map((t) =>
-        t.id === template.id ? { ...t, sections: [...t.sections, linkedSection] } : t
+        t.id === template.id
+          ? { ...t, sections: [...t.sections, linkedSection] }
+          : t
       ),
     };
   }),

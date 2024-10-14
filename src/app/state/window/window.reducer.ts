@@ -24,7 +24,6 @@ export const windowInitialState: WindowState = {
     maximized: false,
     minimized: false,
     activeUrl: "",
-    message: undefined,
     position: { x: 0, y: 0 },
     size: { width: 800, height: 600 },
     theme: getFromDatabase("notecraftr-theme") || {theme: "light", color: "pink"},
@@ -32,6 +31,7 @@ export const windowInitialState: WindowState = {
     autoCopyOnTemplateChange: getFromDatabase<boolean>("notecraftr-auto-copy-on-template-change") || false,
     autoCopyOnOutputChange: getFromDatabase<boolean>("notecraftr-auto-copy-on-output-change") || false,
     linkedSectionsEnabled: getFromDatabase<boolean>("notecraftr-linked-sections-enabled") || false,
+    message: undefined,
 };
 
 export const windowReducer = createReducer(
