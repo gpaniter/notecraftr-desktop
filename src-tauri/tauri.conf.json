@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "NoteCraftr",
-  "version": "0.2.3",
-  "identifier": "com.tauri.dev",
+  "version": "0.2.4",
+  "identifier": "com.notecraftr.dev",
   "build": {
     "frontendDist": "../dist/notecraftr-desktop/browser",
     "devUrl": "http://localhost:4200",
