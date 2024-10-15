@@ -2,6 +2,8 @@ import { Routes } from '@angular/router';
 import { EditorComponent } from './views/editor/editor.component';
 import { SettingsComponent } from './views/settings/settings.component';
 import { AboutComponent } from './views/about/about.component';
+import { TextFiltrComponent } from './views/addons/textfiltr/textfiltr.component';
+// import { NotesComponent } from './views/addons/notes/notes.component';
 
 export const routes: Routes = [
     {
@@ -29,12 +31,8 @@ export const routes: Routes = [
     //     path: 'note-window/:id',
     //     component: NotePreviewWindowComponent
     // },
-    // {
-    //     path: 'text-replacr',
-    //     component: TextreplacrComponent
-    // },
-    // {
-    //     path: 'text-filtr',
-    //     component: TextfiltrComponent
-    // }
+    {
+        path: 'text-filtr',
+        component: TextFiltrComponent
+    }
 ];

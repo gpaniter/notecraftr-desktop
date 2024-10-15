@@ -1,0 +1,97 @@
+<div class="main-container">
+  <p-button
+    class="back-home-button"
+    pTooltip="Back"
+    tooltipPosition="bottom"
+    showDelay="1000"
+    hideDelay="300"
+    icon="fluent--arrow-hook-up-left-16-regular icon-24"
+    [text]="true"
+    [rounded]="true"
+    (onClick)="onBackClick()"
+  ></p-button>
+
+  <div class="input-container card-bg-2">
+    <span class="header">
+      <b> Input </b>
+    </span>
+
+    <textarea
+      ncInputContext
+      autocomplete="off"
+      id="float-input"
+      [formControl]="inputFormControl"
+      rows="5"
+      cols="45"
+      pInputTextarea
+    >
+    </textarea>
+
+    <div class="paste-button-container">
+      <p-button
+        label="Quick Paste"
+        pTooltip="Paste and replace all text."
+        tooltipPosition="bottom"
+        showDelay="1000"
+        hideDelay="300"
+        (onClick)="paste()"
+      />
+    </div>
+  </div>
+  <div class="options-container card-bg-1">
+    <span class="header">
+      <b> Filters </b>
+    </span>
+    <div class="base-toggle-container">
+      <p-inputSwitch
+        id="filter-numbers"
+        pTooltip="Remove Numbers"
+        tooltipPosition="right"
+        showDelay="1000"
+        hideDelay="300"
+        [formControl]="filterNumbersFormControl"
+      />
+      <label for="filter-numbers">Numbers</label>
+    </div>
+
+    <div class="base-toggle-container">
+      <p-inputSwitch
+        id="filter-letters"
+        pTooltip="Remove Letters"
+        tooltipPosition="right"
+        showDelay="1000"
+        hideDelay="300"
+        [formControl]="filterLettersFormControl"
+      />
+      <label for="filter-letters">Letters</label>
+    </div>
+    <div class="base-toggle-container">
+      <p-inputSwitch
+        id="filter-special-char"
+        pTooltip="Remove Special Characters"
+        tooltipPosition="right"
+        showDelay="1000"
+        hideDelay="300"
+        [formControl]="filterSpecialCharactersFormControl"
+      />
+      <label for="filter-special-char">Special Characters</label>
+    </div>
+    <div class="base-toggle-container">
+      <p-inputSwitch
+        id="filter-spaces"
+        pTooltip="Remove Spaces"
+        tooltipPosition="right"
+        showDelay="1000"
+        hideDelay="300"
+        [formControl]="filterSpacesFormControl"
+      />
+      <label for="filter-spaces">Spaces</label>
+    </div>
+  </div>
+</div>
+<nc-output-actions
+  style="z-index: 3; position: relative"
+  [output]="output()"
+  [previewVisible]="previewVisible()"
+  (previewToggle)="onPreviewToggle()"
+/>

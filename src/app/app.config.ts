@@ -14,15 +14,16 @@ import { editorReducer } from "./state/editor/";
 import { EditorEffects } from "./state/editor/";
 import { windowReducer } from "./state/window/window.reducer";
 import { WindowEffects } from "./state/window/window.effects";
+import { TextFiltrEffects, textFiltrReducer } from "./state/textfiltr";
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideExperimentalZonelessChangeDetection(),
     provideRouter(routes),
     importProvidersFrom([BrowserAnimationsModule]),
-    provideStore({ window: windowReducer, editor: editorReducer }),
+    provideStore({ window: windowReducer, editor: editorReducer, textFiltr: textFiltrReducer }),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
-    provideEffects([EditorEffects, WindowEffects]),
+    provideEffects([EditorEffects, WindowEffects, TextFiltrEffects]),
     // importProvidersFrom(EffectsModule.forRoot([EditorEffects, WindowEffects]))
   ],
 };

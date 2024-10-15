@@ -1,0 +1,52 @@
+.main-container{
+    display: grid;
+    // padding: 1rem;
+    height: 100%;
+}
+
+.ql-formats {
+    // background-color: red;
+    overflow: hidden;
+    transition: height 0.2s;
+    height: 0rem;
+}
+
+.formats-visible {
+    height: 1.8rem !important;
+}
+
+::ng-deep .ql-editor {
+    background-color: transparent !important;
+    padding: none !important;
+    // height: 100px !important;
+    
+}
+
+::ng-deep .p-editor-toolbar {
+    background-color: transparent !important;
+    border: none !important;
+    padding: 0px !important;
+}
+::ng-deep .ql-editor::before {
+    color: var(--text-color-secondary) !important;
+  }
+
+::ng-deep .ql-blank {
+
+}
+::ng-deep .ql-toolbar {
+    padding: 0px !important;
+}
+
+::ng-deep .ql-snow {
+    padding: 0px !important;
+}
+
+::ng-deep .p-editor-content {
+    border: none !important;
+}
+
+::ng-deep .p-editor-container {
+    // background-color: red;
+    // height: calc(100% - 2rem);
+}
