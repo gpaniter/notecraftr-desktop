@@ -193,13 +193,13 @@ export class EditorComponent implements OnInit, OnDestroy {
   }
 
   sectionUpdate(section: Section) {
-    if (this.linkedSectionsEnabled()) {
+    if (this.linkedSectionsEnabled() && section.linked) {
       this.store.dispatch(
         EditorState.updateAllLinkedSections({ section: section })
       );
       return
     }
-    this.store.dispatch(EditorState.updateSection({ section }));
+    this.store.dispatch(EditorState.updateSection({ section: section }));
   }
 
   sectionDeleteDialog(section: Section) {
@@ -250,13 +250,13 @@ export class EditorComponent implements OnInit, OnDestroy {
       this.dialogService,
       section,
       (newSection) => {
-        if (!this.linkedSectionsEnabled()) {
+        if (this.linkedSectionsEnabled() && section.linked) {
           this.store.dispatch(
-            EditorState.updateSection({ section: newSection })
+            EditorState.updateAllLinkedSections({ section: newSection })
           );
         } else {
           this.store.dispatch(
-            EditorState.updateAllLinkedSections({ section: newSection })
+            EditorState.updateSection({ section: newSection })
           );
         }
         const message: Message = {
