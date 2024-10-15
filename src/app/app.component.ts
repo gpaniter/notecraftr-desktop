@@ -11,6 +11,7 @@ import * as WindowState from './state/window';
 import { CustomMessageService } from './services/custom-message.service';
 import { CustomDialogService } from './services/custom-dialog.service';
 import { Subscription } from 'rxjs';
+import { Location } from "@angular/common";
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -21,6 +22,7 @@ import { Subscription } from 'rxjs';
 })
 export class AppComponent implements OnInit {
   store = inject(Store);
+  location = inject(Location);
   theme = this.store.selectSignal(WindowState.theme);
   primengConfig = inject(PrimeNGConfig);
   customMessage = inject(CustomMessageService);
@@ -32,6 +34,7 @@ export class AppComponent implements OnInit {
   
   windowResize$: UnlistenFn | undefined;
   windowClose$: UnlistenFn | undefined;
+  locationUnregister$: VoidFunction | undefined;
 
   themeChange$ = effect(() => {
     const t = this.theme();
@@ -46,6 +49,9 @@ export class AppComponent implements OnInit {
     this.primengConfig.ripple = true;
     this.windowResize$ = await onResized(({ payload: size }) => {
       this.checkWindowMaximized();
+    });
+    this.locationUnregister$ = this.location.onUrlChange((url) => {
+      this.store.dispatch(WindowState.updateActiveUrl({ url }));
     });
 
     this.messageChange$ = this.message.subscribe((message) => {
