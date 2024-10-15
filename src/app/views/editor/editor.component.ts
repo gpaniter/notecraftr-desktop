@@ -71,6 +71,7 @@ export class EditorComponent implements OnInit, OnDestroy {
   sectionsFilter = this.store.selectSignal(EditorState.sectionsFilter);
   visibleSections = this.store.selectSignal(EditorState.visibleSections);
   output = this.store.selectSignal(EditorState.output);
+
   linkedSectionsEnabled = this.store.selectSignal(
     WindowState.linkedSectionsEnabled
   );

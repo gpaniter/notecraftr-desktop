@@ -5,7 +5,7 @@
       [rounded]="true"
       [disabled]="!activeTemplate()"
       icon="mingcute--add-fill"
-      pTooltip="Create New Section"
+      [pTooltip]="activeTemplate() ? 'Create New Section' : 'Create a Template first'"
       tooltipPosition="left"
       showDelay="1000"
       hideDelay="300"
@@ -53,7 +53,7 @@
         </p-inputIcon>
         <input
           type="text"
-          ncInputContext
+          ncInputContextmenu
           autocomplete="off"
           [formControl]="filterFormControl"
           pInputText

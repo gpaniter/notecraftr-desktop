@@ -13,14 +13,18 @@ export const templates = createSelector(
   (state: EditorState) => state.templates
 );
 
-export const activeTemplate = createSelector(templates, (templates) => {
-  for (let key in templates) {
-    if (templates[key].active) {
-      return templates[key];
-    }
-  }
-  return null;
+export const activeTemplate = createSelector(templates, (templates: Template[]) => {
+  return templates.find((t) => t.active) || null;
 });
+
+export const activeTemplateSections = createSelector(
+  activeTemplate,
+  (template) => {
+    return template ? template.sections : [];
+  }
+);
+
+
 export const sectionsFilter = createSelector(
   selectEditor,
   (state: EditorState) => state.sectionsFilter
@@ -58,6 +62,7 @@ export const output = createSelector(
     (template: Template | null) => {
   let output = "";
   if (!template) return output;
+
   for (let i = 0; i < template.sections.length; i++) {
     const section = template.sections[i];
     if (!section.active) continue;

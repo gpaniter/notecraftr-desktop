@@ -256,7 +256,7 @@ export class MenubarComponent {
         // Check if templates are empty
         templates = templates.filter((t) => t.id !== template.id);
         if (templates.length === 0) {
-          // this.store.dispatch(EditorState.createDefaultTemplate());
+          this.store.dispatch(EditorState.createDefaultTemplate());
         }
       },
       () => {

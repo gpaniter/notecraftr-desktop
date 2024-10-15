@@ -5,7 +5,7 @@
         <input
           type="text"
           id="title"
-          ncInputContext
+          ncInputContextmenu
           pInputText
           autocomplete="off"
           [formControl]="titleFormControl"
@@ -18,7 +18,7 @@
         <input
           type="text"
           id="prefix"
-          ncInputContext
+          ncInputContextmenu
           pInputText
           autocomplete="off"
           pTooltip="Text that will be added before the selected value. (Optional)"
@@ -35,7 +35,7 @@
         <input
           type="text"
           id="suffix"
-          ncInputContext
+          ncInputContextmenu
           pInputText
           autocomplete="off"
           pTooltip="Text that will be added after the selected value. (Optional)"
@@ -54,7 +54,7 @@
           type="text"
           id="separator"
           pInputText
-          ncInputContext
+          ncInputContextmenu
           autocomplete="off"
           pTooltip="Text that will be added in between the selected multiple values. (Optional)"
           tooltipPosition="bottom"
@@ -118,7 +118,7 @@
             type="text"
             pInputTextarea
             [rows]="1"
-            ncInputContext
+            ncInputContextmenu
             autocomplete="off"
             [placeholder]="'Option ' + (idx + 1)"
             [value]="option"
@@ -168,7 +168,7 @@
         id="date-format-custom"
         placeholder="Example: DD ~ MM ~ YYYY"
         pInputText
-        ncInputContext
+        ncInputContextmenu
         autocomplete="off"
         pTooltip="For custom date format reference, see table below."
         tooltipPosition="bottom"

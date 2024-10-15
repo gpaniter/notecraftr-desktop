@@ -18,7 +18,6 @@ export abstract class EffectsWrapper {
 
 @Injectable()
 export class EditorEffects extends EffectsWrapper {
-
   consoleLogActions$ = createEffect(
     () =>
       this.actions$.pipe(
