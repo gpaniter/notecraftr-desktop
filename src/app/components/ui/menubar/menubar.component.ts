@@ -48,20 +48,17 @@ export class MenubarComponent {
   addonsEnabled = this.store.selectSignal(WindowState.addonsEnabled);
   activeUrl = this.store.selectSignal(WindowState.activeUrl);
   maximized = this.store.selectSignal(WindowState.maximized);
+  notePreviewWindowMode = this.store.selectSignal(WindowState.notePreviewWindowMode);
   templates = this.store.selectSignal(EditorState.templates);
   activeTemplate = this.store.selectSignal(EditorState.activeTemplate);
   appIcon = signal("");
   mouseHovered = signal(false);
   closeButtonHovered = signal(false);
-  notePreviewWindowMode = computed(() => {
-    const url = this.activeUrl();
-    return /note-window/g.test(url);
-  });
   editorMode = computed(() => {
     const url = this.activeUrl();
     return ["", "/", "/editor"].includes(url);
   });
-  windowBlured = signal(false);
+  windowBlured = this.store.selectSignal(WindowState.blurred);
 
   templateMenuItems = computed<MenuItem[]>(() => {
     const templates = this.templates();

@@ -16,6 +16,7 @@ export type WindowState = {
     autoCopyOnOutputChange: boolean;
     linkedSectionsEnabled: boolean;
     message: Message | undefined;
+    blurred: boolean;
     
 
 };
@@ -32,6 +33,7 @@ export const windowInitialState: WindowState = {
     autoCopyOnOutputChange: getFromDatabase<boolean>("notecraftr-auto-copy-on-output-change") || false,
     linkedSectionsEnabled: getFromDatabase<boolean>("notecraftr-linked-sections-enabled") || false,
     message: undefined,
+    blurred: false
 };
 
 export const windowReducer = createReducer(
@@ -106,6 +108,30 @@ export const windowReducer = createReducer(
         return {
             ...state,
             message: message
+        };
+    }),
+
+    // Update Blurred
+    on(WindowActions.updateBlurred, (state, { blurred }) => {
+        return {
+            ...state,
+            blurred: blurred
+        };
+    }),
+
+    // Update Position
+    on(WindowActions.updatePosition, (state, { position }) => {
+        return {
+            ...state,
+            position: position
+        };
+    }),
+
+    // Update Size
+    on(WindowActions.updateSize, (state, { size }) => {
+        return {
+            ...state,
+            size: size
         };
     }),
 )

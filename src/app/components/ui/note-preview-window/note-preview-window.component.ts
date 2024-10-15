@@ -8,14 +8,20 @@ import {
   viewChild,
 } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import {  emitTo, listen, UnlistenFn } from "@tauri-apps/api/event";
-import { getCurrentWindow } from "@tauri-apps/api/window";
+import { emitTo, listen, UnlistenFn } from "@tauri-apps/api/event";
 import { Editor, EditorModule } from "primeng/editor";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import Quill, { Range } from "quill";
 import { NgClass } from "@angular/common";
 import { IconMenuItem, Menu, PredefinedMenuItem } from "@tauri-apps/api/menu";
-import { readTextFromClipboard, writeTextToClipboard } from "../../../../lib/notecraftr-tauri";
+import { Store } from "@ngrx/store";
+import * as WindowState from "../../../state/window";
+import * as NotesState from "../../../state/notes";
+import { Note } from "../../../types/notecraftr";
+import {
+  readTextFromClipboard,
+  writeTextToClipboard,
+} from "../../../lib/notecraftr-tauri";
 
 @Component({
   selector: "nc-note-preview-window",
@@ -24,66 +30,43 @@ import { readTextFromClipboard, writeTextToClipboard } from "../../../../lib/not
   templateUrl: "./note-preview-window.component.html",
   styleUrl: "./note-preview-window.component.scss",
 })
-export class NotePreviewWindowComponent implements OnInit, AfterViewInit, OnDestroy {
+export class NotePreviewWindowComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
   route = inject(ActivatedRoute);
-  notesService = inject(NotesService);
-  databaseService = inject(DatabaseService);
-  windowService = inject(WindowService);
-  windowBlured = this.windowService.blurred;
-  theme = this.databaseService.theme;
-  notes = this.notesService.notes;
-  note: Note = { text: "", id: 0, opened: true, backgroundClass: "" };
+  store = inject(Store);
+  windowBlured = this.store.selectSignal(WindowState.blurred);
+  theme = this.store.selectSignal(WindowState.theme);
+  notes = this.store.selectSignal(NotesState.notes);
+
+  note: Note = { text: "", id: 0, opened: true, backgroundClass: "card-bg-1" };
   textFormControl = new FormControl<string>("");
   editor = viewChild.required<Editor>(Editor);
   menu: Menu | undefined = undefined;
-
-  windowMove$!: UnlistenFn;
-  windowResize$!: UnlistenFn;
   theme$!: UnlistenFn;
-  windowBlur$!: UnlistenFn;
 
   constructor() {
     this.note =
       this.notes().find(
         (note) => note.id == Number(this.route.snapshot.paramMap.get("id"))
       ) || this.note;
-    this.note.opened = true;
   }
 
   async ngOnInit() {
-    emitTo("notecraftr", "note-change", this.note);
-    this.windowMove$ = await listen(
-      "tauri://move",
-      (e: { payload: { x: number; y: number } }) => {
-        // this.notesService.editNote({...this.note, x: e.payload.x, y: e.payload.y})
-        emitTo("notecraftr", "note-change", {
-          ...this.note,
-          text: this.textFormControl.value,
-          x: e.payload.x,
-          y: e.payload.y,
-        });
-      }
-    );
-    this.windowResize$ = await listen("tauri://resize", (e: { payload: { width: number; height: number } }) => {
-      emitTo("notecraftr", "note-change", { ...this.note, text: this.textFormControl.value, width: e.payload.width, height: e.payload.height });
-      // getCurrentWindow().outerPosition().then((pos) => {
-      //   emitTo("notecraftr", "note-change", { ...this.note, x: pos.x, y: pos.y });
-      // })
-    });
     this.theme$ = await listen("custom-theme-change", (e) => {
-      this.theme.set(e.payload as { theme: string; color: string });
+      this.store.dispatch(
+        WindowState.updateTheme({
+          theme: e.payload as { theme: string; color: string },
+        })
+      );
     });
-    this.windowBlur$ = await getCurrentWindow().onFocusChanged(
-      ({ payload: focused }) => {
-        this.windowBlured.set(!focused);
-      }
-    );
-
     this.textFormControl.setValue(this.note.text);
-
     this.textFormControl.valueChanges.subscribe((text) => {
       emitTo("notecraftr", "note-change", { ...this.note, text });
     });
+    this.store.dispatch(
+      NotesState.updateNote({ note: { ...this.note, opened: true } })
+    );
   }
 
   ngAfterViewInit(): void {
@@ -93,10 +76,9 @@ export class NotePreviewWindowComponent implements OnInit, AfterViewInit, OnDest
   get quill(): Quill {
     return this.editor().getQuill();
   }
- 
 
   ngOnDestroy(): void {
-    const unlisten = [this.windowMove$, this.theme$, this.windowBlur$, this.windowResize$];
+    const unlisten = [this.theme$];
     unlisten.forEach((fn) => fn());
   }
 
@@ -204,7 +186,7 @@ export class NotePreviewWindowComponent implements OnInit, AfterViewInit, OnDest
     if (!this.menu) {
       return;
     }
-    await this.updateMenu().then(() => this.menu?.popup())
+    await this.updateMenu().then(() => this.menu?.popup());
   }
 
   // selectAll() {
@@ -228,7 +210,6 @@ export class NotePreviewWindowComponent implements OnInit, AfterViewInit, OnDest
     this.quill.focus();
     document.execCommand("redo", false);
   }
-
 
   selectAll() {
     this.quill.focus();
@@ -256,13 +237,15 @@ export class NotePreviewWindowComponent implements OnInit, AfterViewInit, OnDest
   }
 
   async copySelectedToClipboard() {
-    await writeTextToClipboard(this.quill.getText(this.quill.getSelection() as Range))
-      .then(() => this.quill.focus());
+    await writeTextToClipboard(
+      this.quill.getText(this.quill.getSelection() as Range)
+    ).then(() => this.quill.focus());
   }
 
   async copyAllToClipboard() {
-    await writeTextToClipboard(this.quill.getText(this.quill.getSelection() || undefined))
-      .finally(() => this.quill.focus());
+    await writeTextToClipboard(
+      this.quill.getText(this.quill.getSelection() || undefined)
+    ).finally(() => this.quill.focus());
   }
 
   async pasteSelectedFromClipboard() {

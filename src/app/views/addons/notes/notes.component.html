@@ -22,7 +22,6 @@
     hideDelay="300"
     (onClick)="addNewNote()"
   >
-  
   </p-button>
 
   <div class="searchbar-container"></div>
@@ -30,7 +29,15 @@
   @if (notes().length > 0) {
   <div class="notes-container">
     @for (note of notes(); track note.id) {
-    <nc-note-item class="note-item-container" [note]="note" (onDelete)="deleteNote($event)"> </nc-note-item>
+    <nc-note-item
+      class="note-item-container"
+      [note]="note"
+      (onDelete)="deleteNoteDialog($event)"
+      (onDuplicate)="duplicateNote($event)"
+      (onEdit)="editNote($event)"
+      (onShowHideNote)="showHideNoteWindow($event)"
+    >
+    </nc-note-item>
     }
   </div>
   } @else {
@@ -395,8 +402,6 @@
         Create your first note now.
       </span>
     </span>
-
-    
   </div>
   }
 </div>

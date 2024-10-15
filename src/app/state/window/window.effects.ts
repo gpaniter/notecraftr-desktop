@@ -7,8 +7,7 @@ import { AppState } from "../app.state";
 import { tap, withLatestFrom } from "rxjs";
 import * as WindowSelectors from "./window.selectors";
 import { setToDatabase } from "../../utils/helpers";
-
-
+import { emitTo } from "@tauri-apps/api/event";
 
 @Injectable()
 export class WindowEffects extends EffectsWrapper {
@@ -103,6 +102,48 @@ export class WindowEffects extends EffectsWrapper {
             "notecraftr-linked-sections-enabled",
             linkedSectionsEnabled
           );
+        })
+      ),
+    {
+      dispatch: false,
+    }
+  );
+
+  // Note Preview Window Effects
+
+  windowMoved$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(WindowActions.updatePosition),
+        withLatestFrom(this.store.select(WindowSelectors.selectWindow)),
+        tap(([action, state]) => {
+          if (!/note-window/g.test(state.activeUrl)) {
+            return;
+          }
+          emitTo("notecraftr", "note-window-position", {
+            url: state.activeUrl,
+            position: state.position,
+          });
+        })
+      ),
+    {
+      dispatch: false,
+    }
+  );
+
+  windowResized$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(WindowActions.updateSize),
+        withLatestFrom(this.store.select(WindowSelectors.selectWindow)),
+        tap(([action, state]) => {
+          if (!/note-window/g.test(state.activeUrl)) {
+            return;
+          }
+          emitTo("notecraftr", "note-window-size", {
+            url: state.activeUrl,
+            size: state.size,
+          });
         })
       ),
     {

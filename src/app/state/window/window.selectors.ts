@@ -45,3 +45,25 @@ export const message = createSelector(
     selectWindow,
     (state: WindowState) => state.message
 )
+
+export const blurred = createSelector(
+    selectWindow,
+    (state: WindowState) => state.blurred
+)
+
+export const size = createSelector(
+    selectWindow,
+    (state: WindowState) => state.size
+)
+
+export const position = createSelector(
+    selectWindow,
+    (state: WindowState) => state.position
+)
+
+export const notePreviewWindowMode = createSelector(
+  activeUrl,
+  (activeUrl) => {
+    return /note-window/g.test(activeUrl);
+  }
+)

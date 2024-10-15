@@ -1,17 +1,28 @@
-import { Component, inject } from '@angular/core';
-import { DatabaseService } from '../../../services/database.service';
-import { WindowService } from '../../../services/window.service';
-import { CdkDrag, CdkDragDrop, CdkDragPlaceholder, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
-import { ReactiveFormsModule } from '@angular/forms';
-import { ButtonModule } from 'primeng/button';
-import { TooltipModule } from 'primeng/tooltip';
-import { NoteItemComponent } from '../../ui/note-item/note-item.component';
-import { Note } from '../../../../types/notecraftr';
-import { NotesService } from '../../../services/notes.service';
-import { Location } from '@angular/common';
+import { Component, inject, isDevMode, OnInit } from "@angular/core";
+import {
+  CdkDrag,
+  CdkDragDrop,
+  CdkDragPlaceholder,
+  CdkDropList,
+  moveItemInArray,
+} from "@angular/cdk/drag-drop";
+import { ReactiveFormsModule } from "@angular/forms";
+import { ButtonModule } from "primeng/button";
+import { TooltipModule } from "primeng/tooltip";
+import { Location } from "@angular/common";
+import { NoteItemComponent } from "../../../components/ui/note-item/note-item.component";
+import { Store } from "@ngrx/store";
+import * as WindowState from "../../../state/window";
+import * as NotesState from "../../../state/notes";
+import { Message } from "primeng/api";
+import { Note } from "../../../types/notecraftr";
+import { getAllNoteCraftrWindows } from "../../../lib/notecraftr-tauri";
+import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
+import { CustomDialogService } from "../../../services/custom-dialog.service";
+import { DialogService } from "primeng/dynamicdialog";
 
 @Component({
-  selector: 'nc-notes',
+  selector: "nc-notes",
   standalone: true,
   imports: [
     CdkDropList,
@@ -20,47 +31,200 @@ import { Location } from '@angular/common';
     ReactiveFormsModule,
     ButtonModule,
     TooltipModule,
-    NoteItemComponent
+    NoteItemComponent,
   ],
-  templateUrl: './notes.component.html',
-  styleUrl: './notes.component.scss'
+  templateUrl: "./notes.component.html",
+  styleUrl: "./notes.component.scss",
+  providers: [DialogService],
 })
-export class NotesComponent {
-  databaseService = inject(DatabaseService);
-  noteService = inject(NotesService);
-  windowService = inject(WindowService);
+export class NotesComponent implements OnInit {
+  store = inject(Store);
+  customDialog = inject(CustomDialogService);
+  dialogService = inject(DialogService);
   locationService = inject(Location);
-  theme = this.databaseService.theme;
-  notes = this.databaseService.notes;
-  
+  theme = this.store.selectSignal(WindowState.theme);
+  notes = this.store.selectSignal(NotesState.notes);
 
-  addNewNote() {
-    let notes = this.notes();
-    this.noteService.addNewNote(notes);
-    this.noteService.saveNotes(notes);
-    this.windowService.showMessage.emit({
-      severity: "success",
-      summary: "New Note",
-      detail: `A new Note was created.`,
+  ngOnInit(): void {
+    this.checkForOpenedNotes();
+  }
+
+  checkForOpenedNotes() {
+    let notes = structuredClone(this.notes());
+    notes = notes.map((n) => ({ ...n, opened: false }));
+    getAllNoteCraftrWindows().then((windows) => {
+      windows.forEach((w) => {
+        let id = Number(w.label.split("-")[1]);
+        let note = notes.find((n) => n.id === id);
+        if (note) {
+          note.opened = true;
+        }
+      });
+      this.store.dispatch(NotesState.updateNotes({ notes }));
     });
   }
 
-  noteDrop(event: CdkDragDrop<Note[]>){
-    let notes = this.notes();
+  addNewNote() {
+    this.store.dispatch(NotesState.addNote());
+    const message: Message = {
+      severity: "success",
+      summary: "New Note",
+      detail: `A new Note was created.`,
+    };
+    this.store.dispatch(WindowState.showMessage({ message: message }));
+  }
+
+  noteDrop(event: CdkDragDrop<Note[]>) {
+    let notes = structuredClone(this.notes());
     moveItemInArray(notes, event.previousIndex, event.currentIndex);
-    this.noteService.saveNotes(notes);
+    this.store.dispatch(NotesState.updateNotes({ notes }));
   }
 
   onBackClick() {
     this.locationService.back();
   }
 
-  deleteNote(note: Note) {
-    const notes = this.notes();
-
-    // CUSTOM FUNCTION FOR DELETING NOTE
-    // BUG WHEN USING DELETE, then SAVE
-    this.noteService.deleteNoteAndSave(note, notes);
+  deleteNoteDialog(note: Note) {
+    this.customDialog.openConfirmDialog(
+      this.dialogService,
+      {
+        header: "Delete Note",
+        message: "Are you sure you want to delete this note?",
+        buttonAppearance: "danger",
+        yes: "Delete",
+        no: "Cancel",
+      },
+      (v) => {
+        if (v) {
+          this.deleteNote(note);
+        }
+      },
+      () => {
+        const message: Message = {
+          severity: "secondary",
+          summary: "Cancelled",
+          detail: "Note deletion was cancelled",
+        };
+        this.store.dispatch(WindowState.showMessage({ message }));
+      }
+    );
   }
-  
+
+  deleteNote(note: Note) {
+    getAllNoteCraftrWindows()
+      .then((windows) => {
+        windows.forEach(async (w) => {
+          if (w.label === `note-${note.id}`) {
+            await w.close();
+          }
+        });
+      })
+      .finally(() => {
+        this.store.dispatch(NotesState.deleteNote({ note }));
+        const message: Message = {
+          severity: "error",
+          summary: "Note Deleted",
+          detail: `Note was deleted.`,
+        };
+        this.store.dispatch(WindowState.showMessage({ message: message }));
+      });
+  }
+
+  duplicateNote(note: Note) {
+    this.store.dispatch(NotesState.duplicateNote({ note }));
+    let foundWindow = false;
+    getAllNoteCraftrWindows()
+      .then((windows) => {
+        windows.forEach(async (w) => {
+          if (w.label === `note-${note.id}`) {
+            foundWindow = true;
+          }
+        });
+      })
+      .finally(() => {
+        if (foundWindow) {
+          const notes = this.notes();
+          const latestNote =
+            notes.length > 0 ? notes[notes.length - 1] : undefined;
+          if (latestNote) {
+            const x = note.x ? note.x + 10 : undefined;
+            const y = note.y ? note.y + 10 : undefined;
+            this.openNote(latestNote, x, y);
+          }
+        }
+        const message: Message = {
+          severity: "success",
+          summary: "Note Duplicated",
+          detail: `Note was duplicated.`,
+        };
+        this.store.dispatch(WindowState.showMessage({ message: message }));
+      });
+  }
+
+  showHideNoteWindow(event: { note: Note; hide: boolean }) {
+    if (event.hide) this.closeNote(event.note);
+    else this.openNote(event.note);
+  }
+
+  async openNote(note: Note, x?: number, y?: number) {
+    const hasScreenPos = !!(note.x || note.y);
+    const webview = new WebviewWindow(`note-${note.id}`, {
+      url: isDevMode()
+        ? `http://localhost:4200/note-window/${note.id}`
+        : `tauri://localhost/note-window/${note.id}`,
+      decorations: false,
+      width: note.width || 200,
+      height: note.height || 200,
+      minHeight: 75,
+      minWidth: 200,
+      theme: "light",
+      title: "Notes",
+      center: !hasScreenPos,
+      x: x || note.x,
+      y: y || note.y,
+    });
+    const un = await webview.once("tauri://created", (e) => {
+      this.store.dispatch(
+        NotesState.updateNote({ note: { ...note, opened: true } })
+      );
+      un();
+    });
+  }
+
+  closeNote(note: Note) {
+    getAllNoteCraftrWindows().then((windows) => {
+      windows.forEach((w) => {
+        if (w.label === `note-${note.id}`) {
+          w.close().then(
+            () => {
+              this.store.dispatch(
+                NotesState.updateNote({ note: { ...note, opened: false } })
+              );
+            },
+            (e) => {
+              console.error(e);
+            }
+          );
+        }
+      });
+    });
+  }
+
+  editNote(note: Note) {
+    let foundWindow = false;
+    getAllNoteCraftrWindows()
+      .then((windows) => {
+        windows.forEach(async (w) => {
+          if (w.label === `note-${note.id}`) {
+            foundWindow = true;
+            await w.setFocus();
+          }
+        });
+      })
+      .finally(() => {
+        if (!foundWindow) {
+          this.openNote(note);
+        }
+      });
+  }
 }
