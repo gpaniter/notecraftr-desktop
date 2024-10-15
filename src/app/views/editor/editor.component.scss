@@ -38,6 +38,7 @@
     padding-top: 1rem;
     padding-left: 1rem;
     padding-bottom: 0.5rem;
+    z-index: 4;
     // top: 1rem;
     // left: 2rem;
     // position: sticky;
@@ -100,6 +101,7 @@
     color: var(--text-color-secondary);
     text-align: center;
     font-size: large;
+    transform: translateY(-2rem);
   }
   
   

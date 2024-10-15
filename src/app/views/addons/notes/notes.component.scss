@@ -2,7 +2,7 @@
   display: grid;
   padding: 1rem;
   position: relative;
-  grid-template-rows: auto auto 1fr;
+  grid-template-rows: auto 1fr;
   height: 100%;
   width: 100%;
   gap: 1rem;
@@ -17,6 +17,7 @@
 
 .back-home-button {
   width: min-content;
+  z-index: 4;
 }
 
 .searchbar-container {
@@ -34,6 +35,8 @@
 .notes-container {
   display: grid;
   //   overflow: hidden;
+  // background-color: red;
+  align-content: start;
   width: 100%;
   grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
   gap: 0.5rem;
@@ -98,5 +101,6 @@
   color: var(--text-color-secondary);
   text-align: center;
   font-size: large;
+  transform: translateY(-2rem);
 }
 
