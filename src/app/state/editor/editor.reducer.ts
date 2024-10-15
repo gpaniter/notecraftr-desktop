@@ -54,11 +54,15 @@ export const editorReducer = createReducer(
   on(duplicateTemplate, (state, { template }) => {
     let title = template.title + " (Copy)";
     const sameNames = state.templates.filter((t) => t.title.includes(title));
-    if (sameNames.length > 0) title += ` (${sameNames.length})`;
-    const newTemplate = {
+    if (sameNames.length > 0) {
+      title += ` (${sameNames.length})`
+    };
+    const id = getUniqueId(state.templates.map((t) => t.id))
+    const newTemplate: Template = {
       ...template,
-      id: getUniqueId(state.templates.map((t) => t.id)),
+      id,
       title,
+      sections: template.sections.map(s => ({...s, templateId: id}))
     };
     return {
       ...state,

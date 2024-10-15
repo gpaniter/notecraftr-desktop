@@ -68,15 +68,18 @@ export const output = createSelector(
     if (!section.active) continue;
 
     let textValue = section.prefix;
+    let hasValue = false;
 
     switch (section.type) {
       case "single":
         textValue += section.singleTextValue || "";
+        hasValue = !!section.singleTextValue;
         break;
       case "multiple":
         textValue += section.multipleTextValue
           ? section.multipleTextValue.join(section.separator || "")
           : "";
+          hasValue = (!!section.multipleTextValue && section.multipleTextValue.length > 0);
         break;
       case "date":
         const date = section.dateValue || new Date();
@@ -87,13 +90,17 @@ export const output = createSelector(
           date,
           isCustomFormat ? customDateFormat : format
         );
+        hasValue = !!section.dateValue;
         break;
       case "input":
         textValue += section.inputValue || "";
+        hasValue = !!section.inputValue;
         break;
     }
-    textValue += section.suffix;
-    output += textValue;
+    if (hasValue) {
+      textValue += section.suffix;
+      output += textValue;
+    }
   }
   return output;
 });
