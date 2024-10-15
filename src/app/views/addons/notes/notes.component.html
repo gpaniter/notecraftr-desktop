@@ -1,0 +1,407 @@
+<div class="main-container">
+  <p-button
+    class="back-home-button"
+    pTooltip="Back"
+    tooltipPosition="bottom"
+    showDelay="1000"
+    hideDelay="300"
+    icon="fluent--arrow-hook-up-left-16-regular icon-24"
+    [text]="true"
+    [rounded]="true"
+    (onClick)="onBackClick()"
+  ></p-button>
+
+  <p-button
+    class="add-note-button"
+    [raised]="true"
+    [rounded]="true"
+    icon="mingcute--add-fill"
+    pTooltip="Create New Note"
+    tooltipPosition="left"
+    showDelay="1000"
+    hideDelay="300"
+    (onClick)="addNewNote()"
+  >
+  </p-button>
+
+  <div class="searchbar-container"></div>
+
+  @if (notes().length > 0) {
+  <div class="notes-container">
+    @for (note of notes(); track note.id) {
+    <nc-note-item
+      class="note-item-container"
+      [note]="note"
+      (onDelete)="deleteNoteDialog($event)"
+      (onDuplicate)="duplicateNote($event)"
+      (onEdit)="editNote($event)"
+      (onShowHideNote)="showHideNoteWindow($event)"
+    >
+    </nc-note-item>
+    }
+  </div>
+  } @else {
+  <div class="call-to-action-container">
+    <svg
+      version="1.1"
+      height="100px"
+      width="100px"
+      id="_x34_"
+      xmlns="http://www.w3.org/2000/svg"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      viewBox="0 0 512 512"
+      xml:space="preserve"
+      fill="#000000"
+    >
+      <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+      <g
+        id="SVGRepo_tracerCarrier"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      ></g>
+      <g id="SVGRepo_iconCarrier">
+        <g>
+          <defs>
+            <filter
+              id="Adobe_OpacityMaskFilter"
+              filterUnits="userSpaceOnUse"
+              x="0"
+              y="0"
+              width="449.074"
+              height="512"
+            >
+              <feFlood
+                style="flood-color: white; flood-opacity: 1"
+                result="back"
+              ></feFlood>
+              <feBlend in="SourceGraphic" in2="back" mode="normal"></feBlend>
+            </filter>
+          </defs>
+          <mask
+            maskUnits="userSpaceOnUse"
+            x="0"
+            y="0"
+            width="449.074"
+            height="512"
+            id="SVGID_1_"
+          >
+            <g style="filter: url(#Adobe_OpacityMaskFilter)">
+              <defs>
+                <filter
+                  id="Adobe_OpacityMaskFilter_1_"
+                  filterUnits="userSpaceOnUse"
+                  x="0"
+                  y="0"
+                  width="449.074"
+                  height="512"
+                >
+                  <feFlood
+                    style="flood-color: white; flood-opacity: 1"
+                    result="back"
+                  ></feFlood>
+                  <feBlend
+                    in="SourceGraphic"
+                    in2="back"
+                    mode="normal"
+                  ></feBlend>
+                </filter>
+              </defs>
+              <mask
+                maskUnits="userSpaceOnUse"
+                x="0"
+                y="0"
+                width="449.074"
+                height="512"
+                id="SVGID_1_"
+              >
+                <g style="filter: url(#Adobe_OpacityMaskFilter_1_)"></g>
+              </mask>
+              <linearGradient
+                id="SVGID_2_"
+                gradientUnits="userSpaceOnUse"
+                x1="0"
+                y1="256"
+                x2="449.0736"
+                y2="256"
+              >
+                <stop offset="0.1014" style="stop-color: #f6f6f6"></stop>
+                <stop offset="1" style="stop-color: #ffffff"></stop>
+              </linearGradient>
+              <path
+                style="mask: url(#SVGID_1_); fill: url(#SVGID_2_)"
+                d="M449.074,45.881v371.248l-46.922,45.209l-51.108,49.158L350.52,512 H47.618c-12.385,0-23.547-4.538-32.008-12.017c-1.134-0.924-2.18-1.932-3.139-3.025C4.708,488.808,0,477.967,0,466.035V45.881 c0-2.941,0.261-5.798,0.871-8.655C5.058,16.05,24.42,0,47.618,0h353.835c18.404,0,34.45,10.167,42.3,24.957 c1.744,3.277,3.139,6.723,4.011,10.42C448.638,38.738,449.074,42.268,449.074,45.881z"
+              ></path>
+            </g>
+          </mask>
+          <linearGradient
+            id="SVGID_3_"
+            gradientUnits="userSpaceOnUse"
+            x1="0"
+            y1="256"
+            x2="449.0736"
+            y2="256"
+          >
+            <stop offset="0.1014" style="stop-color: #f4f2be"></stop>
+            <stop offset="1" style="stop-color: #f6f4d5"></stop>
+          </linearGradient>
+          <path
+            style="fill: url(#SVGID_3_)"
+            d="M449.074,45.881v371.248l-46.922,45.209l-51.108,49.158L350.52,512H47.618 c-12.385,0-23.547-4.538-32.008-12.017c-1.134-0.924-2.18-1.932-3.139-3.025C4.708,488.808,0,477.967,0,466.035V45.881 c0-2.941,0.261-5.798,0.871-8.655C5.058,16.05,24.42,0,47.618,0h353.835c18.404,0,34.45,10.167,42.3,24.957 c1.744,3.277,3.139,6.723,4.011,10.42C448.638,38.738,449.074,42.268,449.074,45.881z"
+          ></path>
+          <polygon
+            style="opacity: 0.2; fill: #776b5e"
+            points="350.52,434.961 193.793,511.975 349.822,511.975 350.52,511.771 351.043,511.566 "
+          ></polygon>
+          <defs>
+            <filter
+              id="Adobe_OpacityMaskFilter_2_"
+              filterUnits="userSpaceOnUse"
+              x="0"
+              y="0"
+              width="449.074"
+              height="104.619"
+            >
+              <feFlood
+                style="flood-color: white; flood-opacity: 1"
+                result="back"
+              ></feFlood>
+              <feBlend in="SourceGraphic" in2="back" mode="normal"></feBlend>
+            </filter>
+          </defs>
+          <mask
+            maskUnits="userSpaceOnUse"
+            x="0"
+            y="0"
+            width="449.074"
+            height="104.619"
+            id="SVGID_4_"
+          >
+            <g style="filter: url(#Adobe_OpacityMaskFilter_2_)">
+              <defs>
+                <filter
+                  id="Adobe_OpacityMaskFilter_3_"
+                  filterUnits="userSpaceOnUse"
+                  x="0"
+                  y="0"
+                  width="449.074"
+                  height="104.619"
+                >
+                  <feFlood
+                    style="flood-color: white; flood-opacity: 1"
+                    result="back"
+                  ></feFlood>
+                  <feBlend
+                    in="SourceGraphic"
+                    in2="back"
+                    mode="normal"
+                  ></feBlend>
+                </filter>
+              </defs>
+              <mask
+                maskUnits="userSpaceOnUse"
+                x="0"
+                y="0"
+                width="449.074"
+                height="104.619"
+                id="SVGID_4_"
+              >
+                <g style="filter: url(#Adobe_OpacityMaskFilter_3_)"></g>
+              </mask>
+              <linearGradient
+                id="SVGID_5_"
+                gradientUnits="userSpaceOnUse"
+                x1="0"
+                y1="52.3093"
+                x2="449.0736"
+                y2="52.3093"
+              >
+                <stop offset="0.0338" style="stop-color: #f6f6f6"></stop>
+                <stop offset="0.6473" style="stop-color: #f6f6f6"></stop>
+                <stop offset="0.9807" style="stop-color: #f6f6f6"></stop>
+              </linearGradient>
+              <path
+                style="mask: url(#SVGID_4_); fill: url(#SVGID_5_)"
+                d="M449.074,35.377v69.242H0V37.225C4.206,16.05,23.663,0,46.975,0 h355.56C425.148,0,444.165,15.125,449.074,35.377z"
+              ></path>
+            </g>
+          </mask>
+          <linearGradient
+            id="SVGID_6_"
+            gradientUnits="userSpaceOnUse"
+            x1="0"
+            y1="52.3093"
+            x2="449.0736"
+            y2="52.3093"
+          >
+            <stop offset="0.0338" style="stop-color: #5e411d"></stop>
+            <stop offset="0.6473" style="stop-color: #63543f"></stop>
+            <stop offset="0.9807" style="stop-color: #5f4625"></stop>
+          </linearGradient>
+          <path
+            style="fill: url(#SVGID_6_)"
+            d="M449.074,35.377v69.242H0V37.225C4.206,16.05,23.663,0,46.975,0h355.56 C425.148,0,444.165,15.125,449.074,35.377z"
+          ></path>
+          <path
+            style="fill: #83715b"
+            d="M447.731,35.906v4.957c-4.884-20.251-23.809-35.376-46.312-35.376H47.586 c-23.2,0-42.561,16.049-46.747,37.225v-4.959C5.025,16.579,24.386,0.529,47.586,0.529h353.834 C423.922,0.529,442.847,15.654,447.731,35.906z"
+          ></path>
+          <g>
+            <g>
+              <g>
+                <rect
+                  x="3.073"
+                  y="217.364"
+                  style="fill: #fffef5"
+                  width="442.88"
+                  height="5.71"
+                ></rect>
+              </g>
+              <g>
+                <rect
+                  x="3.073"
+                  y="215.937"
+                  style="fill: #97926d"
+                  width="442.88"
+                  height="5.71"
+                ></rect>
+              </g>
+            </g>
+            <g>
+              <g>
+                <rect
+                  x="3.073"
+                  y="157.561"
+                  style="fill: #fffef5"
+                  width="442.88"
+                  height="5.71"
+                ></rect>
+              </g>
+              <g>
+                <rect
+                  x="3.073"
+                  y="156.134"
+                  style="fill: #97926d"
+                  width="442.88"
+                  height="5.71"
+                ></rect>
+              </g>
+            </g>
+            <g>
+              <g>
+                <rect
+                  x="3.073"
+                  y="277.169"
+                  style="fill: #fffef5"
+                  width="442.88"
+                  height="5.709"
+                ></rect>
+              </g>
+              <g>
+                <rect
+                  x="3.073"
+                  y="275.74"
+                  style="fill: #97926d"
+                  width="442.88"
+                  height="5.71"
+                ></rect>
+              </g>
+            </g>
+            <g>
+              <g>
+                <rect
+                  x="3.073"
+                  y="336.971"
+                  style="fill: #fffef5"
+                  width="442.88"
+                  height="5.709"
+                ></rect>
+              </g>
+              <g>
+                <rect
+                  x="3.073"
+                  y="335.543"
+                  style="fill: #97926d"
+                  width="442.88"
+                  height="5.71"
+                ></rect>
+              </g>
+            </g>
+            <g>
+              <g>
+                <rect
+                  x="3.073"
+                  y="396.775"
+                  style="fill: #fffef5"
+                  width="442.88"
+                  height="5.71"
+                ></rect>
+              </g>
+              <g>
+                <rect
+                  x="3.073"
+                  y="395.348"
+                  style="fill: #97926d"
+                  width="442.88"
+                  height="5.709"
+                ></rect>
+              </g>
+            </g>
+            <g>
+              <g>
+                <polygon
+                  style="fill: #fffef5"
+                  points="408.081,456.599 402.152,462.313 3.051,462.313 3.051,456.599 "
+                ></polygon>
+              </g>
+              <g>
+                <polygon
+                  style="fill: #97926d"
+                  points="409.564,455.17 403.633,460.884 3.051,460.884 3.051,455.17 "
+                ></polygon>
+              </g>
+            </g>
+          </g>
+          <g>
+            <rect
+              x="59.97"
+              y="104.619"
+              style="fill: #ffffff"
+              width="14.652"
+              height="407.381"
+            ></rect>
+            <rect
+              x="58.052"
+              y="104.619"
+              style="fill: #b11c36"
+              width="13.868"
+              height="407.381"
+            ></rect>
+          </g>
+          <linearGradient
+            id="SVGID_7_"
+            gradientUnits="userSpaceOnUse"
+            x1="350.5199"
+            y1="464.54"
+            x2="449.0736"
+            y2="464.54"
+          >
+            <stop offset="0.1063" style="stop-color: #ede2a9"></stop>
+            <stop offset="1" style="stop-color: #f0e8b8"></stop>
+          </linearGradient>
+          <polygon
+            style="fill: url(#SVGID_7_)"
+            points="449.074,417.104 402.152,462.313 350.52,511.976 350.52,417.104 "
+          ></polygon>
+        </g>
+      </g>
+    </svg>
+    <span>
+      <span>It's time to organize your thoughts!</span>
+      <br />
+      <span style="font-size: small; font-style: italic">
+        Create your first note now.
+      </span>
+    </span>
+  </div>
+  }
+</div>

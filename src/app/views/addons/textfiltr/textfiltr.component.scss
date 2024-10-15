@@ -1,0 +1,45 @@
+.main-container {
+    display: grid;
+    height: 100%;
+    padding: 1rem;
+    gap: 1rem;
+    align-content: start;
+}
+
+.header {
+    color: var(--text-color-secondary);
+}
+
+.back-home-button {
+    width: min-content;
+  }
+
+.options-container {
+    display: grid;
+    position: relative;
+    gap: 0.8rem;
+    padding: 1rem;
+    align-content: start;
+    background-color: var(--surface-card);
+    border-radius: var(--border-radius);
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+
+.base-toggle-container {
+    display: grid;
+    grid-auto-flow: column;
+    align-items: center;
+    // align-content: center;
+    justify-content: start;
+    gap: 0.5rem
+}
+
+.input-container {
+    display: grid;
+    position: relative;
+    gap: 0.5rem;
+    padding: 1rem;
+    background-color: var(--surface-card);
+    border-radius: var(--border-radius);
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}

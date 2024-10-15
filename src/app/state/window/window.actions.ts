@@ -59,3 +59,18 @@ export const updateAddonsEnabled = createAction(
     '[Window] Update Addons Enabled',
     props<{ enabled: boolean }>()
 )
+
+export const updateBlurred = createAction(
+    '[Window] Update Blurred',
+    props<{ blurred: boolean }>()
+)
+
+export const updatePosition = createAction(
+    '[Window] Update Position',
+    props<{ position: {x: number, y: number} }>()
+)
+
+export const updateSize = createAction(
+    '[Window] Update Size',
+    props<{ size: {width: number, height: number} }>()
+)

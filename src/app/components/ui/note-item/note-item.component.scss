@@ -1,0 +1,121 @@
+.main-container {
+    display: grid;
+  position: relative;
+//   background-color: var(--surface-card);
+//   background-color: red;
+  min-width: 10rem;
+  height: 6.5rem;
+  border-radius: var(--border-radius);
+  // padding: 1rem;
+  opacity: 1;
+  transition: box-shadow 200ms, opacity 200ms, scale 200ms;
+  overflow: hidden;
+  gap: 1rem;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 2rem), calc(100% - 2rem) 100%, 0 100%);
+
+}
+
+.main-container::after {
+    content: "";
+    width: 2rem;
+    height: 2rem;
+    background-color: var(--surface-300);
+    position: absolute;
+    bottom: 0rem;
+    right: 0rem;
+    border-radius: var(--border-radius) 0rem 0rem 0rem;
+}
+
+.note-preview {
+  text-wrap: wrap;
+  overflow-wrap: break-word;
+  text-overflow: ellipsis;
+  font-family: inherit;
+  -webkit-user-select: auto;
+  -ms-user-select: text;
+  user-select: text; /* Standard syntax */
+  overflow: auto;
+  color:white !important;
+}
+
+.actions-container {
+  display: grid;
+  position: absolute;
+  right: 0rem;
+  top: 0rem;
+  align-items: center;
+  justify-content: start;
+  width: 0px;
+  opacity: 0;
+  overflow: hidden;
+  grid-auto-flow: column;
+  grid-auto-columns: auto;
+  transition: width 250ms cubic-bezier(0, 0, 0.2, 1), opacity 250ms ease;
+}
+
+
+
+.actions-visible {
+  width: 10.5rem;
+  opacity: 1;
+  z-index: 2;
+}
+
+.ql-formats {
+  // background-color: red;
+  overflow: hidden;
+  transition: height 0.2s;
+  height: 0rem;
+}
+
+.formats-visible {
+
+}
+
+::ng-deep .ql-editor {
+  background-color: transparent !important;
+  padding: none !important;
+
+}
+
+::ng-deep .ql-editor::before {
+  color: var(--text-color-secondary) !important;
+}
+
+::ng-deep .p-editor-toolbar {
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0px !important;
+  
+
+}
+
+::ng-deep .ql-blank {
+
+}
+::ng-deep .ql-toolbar {
+  padding: 0px !important;
+  
+
+}
+
+::ng-deep .ql-snow {
+  padding: 0px !important;
+  
+
+}
+
+::ng-deep .p-editor-content {
+  border: none !important;
+  
+
+}
+
+::ng-deep .p-editor-container {
+  // background-color: red;
+  
+
+  // height: calc(100% - 2rem);
+}
+
+

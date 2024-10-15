@@ -1,0 +1,94 @@
+<div
+  class="main-container"
+  [class]="note().backgroundClass || ''"
+  (mouseenter)="setActionVisible(true)"
+  (mouseleave)="setActionVisible(false)"
+>
+  <!-- <pre class="note-preview">{{ note().text }}</pre> -->
+  <p-editor
+    [formControl]="textFormControl"
+    [style]="{ color: 'white' }"
+    placeholder="Take a note..."
+    [readonly]="true"
+  >
+    <ng-template pTemplate="header">
+      <span class="ql-formats"></span>
+    </ng-template>
+  </p-editor>
+
+  <div
+    class="actions-container"
+    [ngClass]="{ 'actions-visible': actionsVisible() }"
+  >
+    @if (actionsVisible()) { @if (note().opened) {
+    <p-button
+      class="open-button"
+      [rounded]="true"
+      icon="mingcute--fullscreen-exit-2-fill"
+      severity="secondary"
+      [text]="true"
+      pTooltip="Close"
+      tooltipPosition="bottom"
+      showDelay="1000"
+      hideDelay="300"
+      (onClick)="closeNote()"
+    >
+    </p-button>
+    } @else {
+    <p-button
+      class="open-button"
+      [rounded]="true"
+      icon="mingcute--fullscreen-2-fill"
+      severity="secondary"
+      [text]="true"
+      pTooltip="Open"
+      tooltipPosition="bottom"
+      showDelay="1000"
+      hideDelay="300"
+      (onClick)="openNote()"
+    >
+    </p-button>
+    }
+
+    <p-button
+      class="edit-button"
+      [rounded]="true"
+      icon="mingcute--edit-2-fill"
+      severity="secondary"
+      [text]="true"
+      pTooltip="Edit"
+      tooltipPosition="bottom"
+      showDelay="1000"
+      hideDelay="300"
+      (onClick)="editNote()"
+    >
+    </p-button>
+    <p-button
+      class="duplicate-button"
+      [rounded]="true"
+      icon="mingcute--copy-2-fill"
+      severity="secondary"
+      [text]="true"
+      pTooltip="Duplicate"
+      tooltipPosition="bottom"
+      showDelay="1000"
+      hideDelay="300"
+      (onClick)="duplicateNote()"
+    >
+    </p-button>
+    <p-button
+      class="delete-button"
+      severity="danger"
+      [rounded]="true"
+      icon="mingcute--delete-2-fill"
+      [text]="true"
+      pTooltip="Delete"
+      tooltipPosition="bottom"
+      showDelay="1000"
+      hideDelay="300"
+      (onClick)="deleteNote()"
+    >
+    </p-button>
+    }
+  </div>
+</div>

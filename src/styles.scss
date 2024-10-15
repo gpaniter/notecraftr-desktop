@@ -1,6 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 @import "primeng/resources/primeng.css";
-
+// import Quill styles in styles.scss
+@import "quill/dist/quill.core.css";
+@import "quill/dist/quill.snow.css";
+// NoteCraftr
 @import "../src/icons.scss";
 
 :host {
